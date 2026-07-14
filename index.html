@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rahul & Avishi's Wedding Invitation</title>
+    <meta name="description" content="You are cordially invited to celebrate the love and union of Rahul Mahajan & Avishi Neema. November 24, 2026.">
+    <!-- Favicon / Tab Icon -->
+    <link rel="icon" type="image/png" href="images/logo.png?v=2.2">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- CSS Stylesheet -->
+    <link rel="stylesheet" href="style.css?v=2.3">
+</head>
+<body>
+
+    <!-- Interactive Invitation Envelope Cover Overlay -->
+    <div class="envelope-overlay" id="envelopeOverlay">
+        <div class="envelope-wrapper" id="envelopeWrapper">
+            <div class="envelope-back"></div>
+            <!-- Invitation Letter Card (position: fixed) -->
+            <div class="envelope-letter" id="envelopeLetter">
+                <div class="letter-inner">
+                    <img src="images/logo.png?v=2.2" alt="Wedding Logo" class="letter-logo">
+                    <span class="letter-invite-text">You're Invited</span>
+                    <span class="letter-names">Rahul & Avishi</span>
+                    <span class="letter-date">24 . 11 . 2026</span>
+                </div>
+            </div>
+            <!-- Left/Right/Bottom flaps of the envelope -->
+            <div class="envelope-front">
+                <svg viewBox="0 0 300 200" width="300" height="200" class="envelope-svg">
+                    <!-- Crimson Red Envelope Front -->
+                    <path d="M 0 0 L 300 0 L 300 200 L 0 200 Z" fill="#9B2C39" />
+                    <!-- Gold Floral line art on front bottom panel -->
+                    <path d="M 10 190 Q 75 120 150 190 Q 225 120 290 190" fill="none" stroke="rgba(197,168,128,0.7)" stroke-width="1.2" />
+                    <path d="M 30 190 Q 150 140 270 190" fill="none" stroke="rgba(197,168,128,0.5)" stroke-width="0.9" />
+                    <!-- Bottom triangle overlap simulation (Darker Red) -->
+                    <path d="M 0 200 L 150 100 L 300 200 Z" fill="#7D1E27" stroke="rgba(197,168,128,0.4)" stroke-width="1" />
+                    <!-- Side flaps -->
+                    <path d="M 0 0 L 130 100 L 0 200 Z" fill="#88222B" />
+                    <path d="M 300 0 L 170 100 L 300 200 Z" fill="#88222B" />
+                </svg>
+            </div>
+            <!-- Flap opening from top -->
+            <div class="envelope-flap" id="envelopeFlap">
+                <svg viewBox="0 0 300 110" width="300" height="110" class="flap-svg">
+                    <!-- Top triangle -->
+                    <path d="M 0 0 L 150 110 L 300 0 Z" fill="#9B2C39" stroke="rgba(197,168,128,0.6)" stroke-width="1.5" />
+                    <!-- Gold Floral design on top flap -->
+                    <path d="M 50 10 Q 100 50 150 100 Q 200 50 250 10" fill="none" stroke="rgba(197,168,128,0.7)" stroke-width="1.2" />
+                    <path d="M 80 10 Q 150 70 220 10" fill="none" stroke="rgba(197,168,128,0.5)" stroke-width="0.9" />
+                </svg>
+            </div>
+            <!-- Custom Rose-Gold Wax Seal -->
+            <div class="envelope-seal" id="envelopeSeal">
+                <img src="images/logo.png?v=2.2" alt="Wax Seal" class="seal-img">
+            </div>
+        </div>
+        
+        <div class="envelope-text-container" id="envelopeTextContainer">
+            <h1 class="envelope-main-title">You're Invited</h1>
+            <p class="envelope-hint">Tap the seal to open your invitation</p>
+        </div>
+    </div>
+
+    <!-- Falling Petals Canvas -->
+    <canvas id="petalCanvas"></canvas>
+
+    <!-- Floating Audio Control -->
+    <button class="music-toggle" id="musicToggle" aria-label="Toggle Music" title="Play romantic melody">
+        <img src="images/logo.png?v=2.2" alt="Wedding Logo" class="music-toggle-logo">
+        <span class="music-notes">
+            <span class="note">♫</span>
+            <span class="note">♪</span>
+            <span class="note">♬</span>
+        </span>
+    </button>
+
+    <!-- Hero Section -->
+    <header class="hero-section" id="hero">
+        <div class="hero-bg" style="background-image: url('images/hero_indian.jpg');"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <!-- Round Cropped Logo Seal -->
+            <img src="images/logo.png?v=2.2" alt="Rahul & Avishi Wedding Logo" class="hero-logo-img fade-up">
+            
+            <h1 class="hero-title fade-up">Rahul & Avishi</h1>
+            
+            <!-- Interactive Scratch Card to Reveal Date (Triple Card layout) -->
+            <div class="scratch-cards-wrapper fade-up" id="scratchCardContainer">
+                <span class="scratch-hint">Scratch to reveal</span>
+                <div class="scratch-cards-row">
+                    <div class="scratch-card-col">
+                        <div class="scratch-card-reveal">Nov</div>
+                        <canvas id="scratchCanvasMonth" class="scratch-canvas" width="95" height="110"></canvas>
+                    </div>
+                    <div class="scratch-card-col">
+                        <div class="scratch-card-reveal">24</div>
+                        <canvas id="scratchCanvasDay" class="scratch-canvas" width="95" height="110"></canvas>
+                    </div>
+                    <div class="scratch-card-col">
+                        <div class="scratch-card-reveal">2026</div>
+                        <canvas id="scratchCanvasYear" class="scratch-canvas" width="95" height="110"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Collapsible Wrapper to hold date and countdown post-scratch -->
+            <div class="hero-reveal-wrapper" id="heroRevealWrapper">
+                <p class="hero-date" id="heroDateRevealed">Khargone, Madhya Pradesh</p>
+                
+                <!-- Countdown Timer -->
+                <div class="countdown-container" id="countdown">
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="days">00</span>
+                        <span class="countdown-label">Days</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="hours">00</span>
+                        <span class="countdown-label">Hours</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="minutes">00</span>
+                        <span class="countdown-label">Mins</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="seconds">00</span>
+                        <span class="countdown-label">Secs</span>
+                    </div>
+                </div>
+            </div>
+            
+            <a href="#story" class="cta-button fade-up">View Details</a>
+        </div>
+        <div class="scroll-indicator">
+            <span>Scroll Down</span>
+            <svg viewBox="0 0 24 24" width="20" height="20">
+                <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" fill="currentColor"/>
+            </svg>
+        </div>
+    </header>
+
+    <!-- Welcome Section -->
+    <section class="section welcome-section container" id="story">
+        <div class="section-header fade-up">
+            <!-- Decorative logo instead of icon -->
+            <img src="images/logo.png?v=2.2" alt="Wedding Logo Icon" class="story-logo-icon">
+            <h2 class="section-title" style="margin-top: 15px;">Our Story</h2>
+            <div class="decorative-line"></div>
+        </div>
+        <div class="story-grid">
+            <div class="story-text fade-up">
+                <p class="welcome-text">
+                    "From a chance meeting to a lifetime of adventures, our journey together has been nothing short of magical. We are thrilled to take the next step in our lives and tie the knot."
+                </p>
+                <p style="margin-bottom: 50px;">
+                    We, <strong>Rahul</strong> &amp; <strong>Avishi</strong>, cordially invite you to join us in celebrating our union. All our wedding festivities will take place at Radhakunj in the historic city Navgrah ki Nagri Khargone, MP. Your presence, blessings, and laughter will make our celebrations complete.
+                </p>
+            </div>
+            
+            <!-- Polaroid Interactive Story Timeline matching reference video -->
+            <div class="polaroid-timeline fade-up">
+                <!-- Milestone 1 -->
+                <div class="polaroid-card" style="--rotation: -2.5deg; z-index: 1;">
+                    <div class="polaroid-image-wrapper">
+                        <img src="gallery/1.png" alt="🌼 The First Meeting">
+                    </div>
+                    <div class="polaroid-caption">
+                        <h4 class="polaroid-milestone">🌼 The First Meeting</h4>
+                        <p class="polaroid-text">A bouquet in our hands, hope in our hearts, and a moment we'll cherish forever. 🤍 Introduced by our families, we never imagined our first meeting would feel this natural. ✨</p>
+                        <span class="polaroid-date">when families met...</span>
+                    </div>
+                </div>
+                <!-- Milestone 2 -->
+                <div class="polaroid-card" style="--rotation: 1.8deg; z-index: 2;">
+                    <div class="polaroid-image-wrapper">
+                        <img src="gallery/2.png" alt="🌸 The Roka Ceremony">
+                    </div>
+                    <div class="polaroid-caption">
+                        <h4 class="polaroid-milestone">🌸 The Roka Ceremony</h4>
+                        <p class="polaroid-text">Surrounded by love and the blessings of our families, we took our first official step towards forever. ❤️ With every promise exchanged, our bond grew a little stronger. ✨</p>
+                        <span class="polaroid-date">sealing our bond...</span>
+                    </div>
+                </div>
+                <!-- Milestone 3 -->
+                <div class="polaroid-card" style="--rotation: -1.5deg; z-index: 3;">
+                    <div class="polaroid-image-wrapper">
+                        <img src="gallery/3.png" alt="🌆 A Perfect Evening">
+                    </div>
+                    <div class="polaroid-caption">
+                        <h4 class="polaroid-milestone">🌆 A Perfect Evening</h4>
+                        <p class="polaroid-text">Some evenings are too special to be measured by time. ❤️ Filled with smiles, heartfelt conversations, and countless little moments, this was another memory we'll cherish forever. ✨</p>
+                        <span class="polaroid-date">a perfect evening...</span>
+                    </div>
+                </div>
+                <!-- Milestone 4 -->
+                <div class="polaroid-card" style="--rotation: 2.2deg; z-index: 4;">
+                    <div class="polaroid-image-wrapper">
+                        <img src="gallery/4.png" alt="💍 The Engagement">
+                    </div>
+                    <div class="polaroid-caption">
+                        <h4 class="polaroid-milestone">💍 The Engagement</h4>
+                        <p class="polaroid-text">A ring, a promise, and two hearts choosing each other forever. ❤️ Surrounded by our loved ones, we celebrated the beginning of our happily ever after. ✨</p>
+                        <span class="polaroid-date">rings exchanged...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Families Section (WITH LOVE, The Families) -->
+    <section class="section families-section" id="families">
+        <div class="container">
+            <div class="section-header fade-up">
+                <span class="families-sub">WITH LOVE</span>
+                <h2 class="families-title">The Families</h2>
+                <div class="decorative-line"></div>
+            </div>
+            
+            <div class="families-card fade-up" style="max-width: 750px; margin: 0 auto; text-align: center;">
+                <span class="gracious-presence">AWAITING YOUR GRACIOUS PRESENCE</span>
+                
+                <!-- Grand Parents (First) -->
+                <div class="grandparents-section" style="margin-bottom: 35px; position: relative; z-index: 2;">
+                    <span class="side-label" style="display: block; margin-bottom: 8px; color: var(--accent-gold); font-size: 0.85rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 600;">Grand Parents</span>
+                    <p class="parent-name" style="font-size: 1.35rem; margin-bottom: 0;"><span style="white-space: nowrap;">Mrs. Usha Saraf</span> &amp; <span style="white-space: nowrap;">Mr. RadhaKrishna Saraf</span></p>
+                </div>
+                
+                <div style="width: 100px; height: 1px; background: linear-gradient(90deg, transparent, var(--accent-gold), transparent); margin: 0 auto 35px auto;"></div>
+                
+                <!-- Both Side Parents -->
+                <div class="families-grid" style="position: relative; z-index: 2;">
+                    <div class="family-side">
+                        <span class="side-label" style="margin-bottom: 12px;">Groom's Side Parents</span>
+                        <p class="parent-name" style="font-size: 1.25rem; font-weight: 500; margin-bottom: 4px;">Mrs. Alka Mahajan</p>
+                        <p class="parent-name" style="font-size: 1.25rem; font-weight: 500; margin-bottom: 0;">Mr. Shyam Mahajan</p>
+                    </div>
+                    <div class="family-divider"></div>
+                    <div class="family-side">
+                        <span class="side-label" style="margin-bottom: 12px;">Bride's Side Parents</span>
+                        <p class="parent-name" style="font-size: 1.25rem; font-weight: 500; margin-bottom: 4px;">Mrs. Lalita Neema</p>
+                        <p class="parent-name" style="font-size: 1.25rem; font-weight: 500; margin-bottom: 0;">Mr. Vinod Neema</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Events Section -->
+    <section class="section events-section" id="events">
+        <div class="container">
+            <div class="section-header fade-up">
+                <h2 class="section-title">The Celebration</h2>
+                <div class="decorative-line"></div>
+                <p class="section-subtitle">Please join us for the wedding festivities</p>
+            </div>
+
+            <div class="events-grid-container">
+                <!-- Thakur Ji Ki Mandli Card -->
+                <div class="event-card fade-up">
+                    <div class="event-card-inner">
+                        <!-- Front Face (Illustration Only) -->
+                        <div class="event-card-front" style="background-image: url('images/card_mandli.jpg');">
+                            <div class="event-card-front-overlay"></div>
+                            <div class="event-badge">Mandli</div>
+                            <div class="event-card-hint">
+                                Tap to Reveal Details <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="vertical-align: middle;"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm-6 8c0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3c-3.31 0-6-2.69-6-6z"/></svg>
+                            </div>
+                        </div>
+                        <!-- Back Face (Invitation Details) -->
+                        <div class="event-card-back">
+                            <div class="event-badge">Mandli</div>
+                            <h3 class="event-name">Shree Thakur Ji Ki Mandli</h3>
+                            <p class="event-date-time">Nov 16, 2026 • 8:00 PM</p>
+                            <div class="event-divider"></div>
+                            <p class="event-location-title">Venue</p>
+                            <p class="event-location-text">50, Aditya Nagar, Khargone</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mehendi Card -->
+                <div class="event-card fade-up">
+                    <div class="event-card-inner">
+                        <!-- Front Face (Illustration Only) -->
+                        <div class="event-card-front" style="background-image: url('images/card_mehendi.jpg');">
+                            <div class="event-card-front-overlay"></div>
+                            <div class="event-badge">Day 1 • Mehendi</div>
+                            <div class="event-card-hint">
+                                Tap to Reveal Details <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="vertical-align: middle;"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm-6 8c0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3c-3.31 0-6-2.69-6-6z"/></svg>
+                            </div>
+                        </div>
+                        <!-- Back Face (Invitation Details) -->
+                        <div class="event-card-back">
+                            <div class="event-badge">Day 1 • Mehendi</div>
+                            <h3 class="event-name">Mehendi Ceremony</h3>
+                            <p class="event-date-time">Nov 22, 2026 • 2:00 PM</p>
+                            <div class="event-divider"></div>
+                            <p class="event-location-title">Venue</p>
+                            <p class="event-location-text">Radhakunj, Khargone</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Haldi Card -->
+                <div class="event-card fade-up">
+                    <div class="event-card-inner">
+                        <!-- Front Face (Illustration Only) -->
+                        <div class="event-card-front" style="background-image: url('images/card_haldi.jpg');">
+                            <div class="event-card-front-overlay"></div>
+                            <div class="event-badge">Day 2 • Haldi Carnival</div>
+                            <div class="event-card-hint">
+                                Tap to Reveal Details <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="vertical-align: middle;"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm-6 8c0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3c-3.31 0-6-2.69-6-6z"/></svg>
+                            </div>
+                        </div>
+                        <!-- Back Face (Invitation Details) -->
+                        <div class="event-card-back">
+                            <div class="event-badge">Day 2 • Haldi Carnival</div>
+                            <h3 class="event-name">Haldi Carnival</h3>
+                            <p class="event-date-time" style="font-size: 0.8rem; margin-bottom: 4px;">Nov 23, 2026</p>
+                            <div class="event-divider" style="margin: 4px auto 10px auto;"></div>
+                            
+                            <div class="sub-events-list" style="text-align: left; width: 100%; padding: 0 10px; box-sizing: border-box; margin-bottom: 12px;">
+                                <div class="sub-event-item" style="margin-bottom: 8px;">
+                                    <div style="font-family: var(--font-heading); color: var(--primary-color); font-size: 0.82rem; font-style: italic; font-weight: 600;">Shree Ganesh Puja</div>
+                                    <div style="color: #2b1b1d; font-size: 0.72rem; line-height: 1.3;">8:00 AM</div>
+                                </div>
+                                <div class="sub-event-item" style="margin-bottom: 8px;">
+                                    <div style="font-family: var(--font-heading); color: var(--primary-color); font-size: 0.82rem; font-style: italic; font-weight: 600;">Haldi</div>
+                                    <div style="color: #2b1b1d; font-size: 0.72rem; line-height: 1.3;">9:00 AM</div>
+                                </div>
+                                <div class="sub-event-item" style="margin-bottom: 8px;">
+                                    <div style="font-family: var(--font-heading); color: var(--primary-color); font-size: 0.82rem; font-style: italic; font-weight: 600;">Carnival</div>
+                                    <div style="color: #2b1b1d; font-size: 0.72rem; line-height: 1.3;">10:00 AM</div>
+                                </div>
+                            </div>
+                            
+                            <p class="event-location-title" style="margin-bottom: 2px;">Venue</p>
+                            <p class="event-location-text" style="font-size: 0.95rem; margin-bottom: 0;">Radhakunj, Khargone</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Engagement & DJ Card -->
+                <div class="event-card fade-up">
+                    <div class="event-card-inner">
+                        <!-- Front Face (Illustration Only) -->
+                        <div class="event-card-front" style="background-image: url('images/card_sangeet.jpg');">
+                            <div class="event-card-front-overlay"></div>
+                            <div class="event-badge">Day 2 • Engagement & DJ</div>
+                            <div class="event-card-hint">
+                                Tap to Reveal Details <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="vertical-align: middle;"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm-6 8c0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3c-3.31 0-6-2.69-6-6z"/></svg>
+                            </div>
+                        </div>
+                        <!-- Back Face (Invitation Details) -->
+                        <div class="event-card-back">
+                            <div class="event-badge">Day 2 • Engagement & DJ</div>
+                            <h3 class="event-name">Engagement & DJ Night</h3>
+                            <p class="event-date-time">Nov 23, 2026 • 8:00 PM</p>
+                            <div class="event-divider"></div>
+                            <p class="event-location-title">Venue</p>
+                            <p class="event-location-text">Radhakunj, Khargone</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shaadi Card -->
+                <div class="event-card fade-up featured">
+                    <div class="event-card-inner">
+                        <!-- Front Face (Illustration Only) -->
+                        <div class="event-card-front" style="background-image: url('images/card_shaadi.jpg');">
+                            <div class="event-card-front-overlay"></div>
+                            <div class="event-badge gold">Main Event • Shaadi</div>
+                            <div class="event-card-hint">
+                                Tap to Reveal Details <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="vertical-align: middle;"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm-6 8c0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3c-3.31 0-6-2.69-6-6z"/></svg>
+                            </div>
+                        </div>
+                        <!-- Back Face (Invitation Details) -->
+                        <div class="event-card-back">
+                            <div class="event-badge gold">Main Event • Shaadi</div>
+                            <h3 class="event-name" style="margin-bottom: 3px;">Wedding & Reception</h3>
+                            <p class="event-date-time" style="font-size: 0.8rem; margin-bottom: 6px;">Nov 24, 2026</p>
+                            <div class="event-divider" style="margin: 6px auto;"></div>
+                            
+                            <div class="sub-events-list" style="text-align: left; width: 100%; padding: 0 10px; box-sizing: border-box; margin-bottom: 12px;">
+                                <div class="sub-event-item" style="margin-bottom: 8px;">
+                                    <div style="font-family: var(--font-heading); color: var(--primary-color); font-size: 0.82rem; font-style: italic; font-weight: 600;">Baarat</div>
+                                    <div style="color: #2b1b1d; font-size: 0.72rem; line-height: 1.3;">4:00 PM</div>
+                                </div>
+                                <div class="sub-event-item" style="margin-bottom: 8px;">
+                                    <div style="font-family: var(--font-heading); color: var(--primary-color); font-size: 0.82rem; font-style: italic; font-weight: 600;">Reception</div>
+                                    <div style="color: #2b1b1d; font-size: 0.72rem; line-height: 1.3;">7:00 PM</div>
+                                </div>
+                                <div class="sub-event-item" style="margin-bottom: 8px;">
+                                    <div style="font-family: var(--font-heading); color: var(--primary-color); font-size: 0.82rem; font-style: italic; font-weight: 600;">Lagan</div>
+                                    <div style="color: #2b1b1d; font-size: 0.72rem; line-height: 1.3;">11:25 PM</div>
+                                </div>
+                            </div>
+                            
+                            <p class="event-location-title" style="margin-bottom: 2px;">Venue</p>
+                            <p class="event-location-text" style="font-size: 0.95rem; margin-bottom: 0;">Radhakunj, Khargone</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Venue Section -->
+    <section class="section venue-section" id="venue">
+        <div class="container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+            <div class="section-header fade-up">
+                <span class="venue-meta-title">Venue</span>
+                <h2 class="venue-main-title">Where We Celebrate</h2>
+                <div class="decorative-line"></div>
+                <p class="venue-address">Radhakunj, Nutan Nagar, Khargone, Madhya Pradesh</p>
+            </div>
+            
+            <div class="map-embed-container fade-up" style="width: 100%;">
+                <iframe 
+                    src="https://maps.google.com/maps?q=Radha%20Kunj%20Khargone&t=&z=16&ie=UTF8&iwloc=&output=embed" 
+                    width="100%" 
+                    height="450" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade"
+                    class="google-map-iframe">
+                </iframe>
+            </div>
+            
+            <div class="venue-action fade-up">
+                <a href="https://maps.google.com/?q=Radhakunj+Khargone" target="_blank" rel="noopener noreferrer" class="directions-btn">
+                    <svg viewBox="0 0 24 24" width="18" height="18" style="vertical-align: middle; margin-right: 6px;">
+                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" fill="currentColor"/>
+                    </svg>
+                    Get Directions
+                </a>
+            </div>
+        </div>
+    </section>
+
+
+
+
+
+    <!-- Footer -->
+    <footer class="footer-section">
+        <div class="container">
+            <!-- Round Cropped Footer Logo -->
+            <img src="images/logo.png?v=2.2" alt="Rahul & Avishi Wedding Logo" class="footer-logo-img">
+            
+            <p class="footer-tagline" style="margin-top: 15px;">We can't wait to celebrate with you!</p>
+            
+            <!-- Contact Helpline Numbers -->
+            <div class="footer-help-container">
+                <p class="help-title">Need Help During the Functions?</p>
+                <div class="contact-numbers" style="justify-content: center;">
+                    <a href="tel:+919826333367" class="contact-link">
+                        <svg viewBox="0 0 24 24" width="16" height="16" style="vertical-align: middle; margin-right: 4px;">
+                            <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" fill="currentColor"/>
+                        </svg>
+                        +91 98263 33367 (Rohit)
+                    </a>
+                </div>
+            </div>
+
+            <!-- Instagram Social Link -->
+            <div class="footer-social-container">
+                <a href="https://www.instagram.com/RahulXAvishi/" target="_blank" rel="noopener noreferrer" class="instagram-btn" title="Follow us on Instagram">
+                    <svg viewBox="0 0 24 24" width="20" height="20" style="vertical-align: middle; margin-right: 8px;">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z" fill="currentColor"/>
+                    </svg>
+                    <span class="instagram-username">@RahulXAvishi</span>
+                </a>
+            </div>
+
+            <p class="footer-copyright">&copy; 2026 Rahul & Avishi's Wedding. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Native background audio element with fallback sources -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="Music.mp3?v=2.2" type="audio/mpeg">
+        <source src="music.mp3?v=2.2" type="audio/mpeg">
+    </audio>
+
+    <!-- Audio Synth script and Main script -->
+    <script src="app.js?v=2.3"></script>
+</body>
+</html>
