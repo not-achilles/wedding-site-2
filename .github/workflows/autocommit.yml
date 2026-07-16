@@ -1,0 +1,29 @@
+name: Keep Contributions Active
+
+on:
+  schedule:
+    - cron: '0 9 * * *' # Runs every day at 09:00 UTC
+  workflow_dispatch: # Allows manual triggering from the Actions tab
+
+jobs:
+  autocommit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Essential permission to push commits back to the repo
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update autocommit log
+        run: |
+          echo "Auto-commit: $(date -u)" >> autocommit_log.txt
+          # Keep only the last 100 entries to prevent the file from growing indefinitely
+          tail -n 100 autocommit_log.txt > temp.txt && mv temp.txt autocommit_log.txt
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add autocommit_log.txt
+          # Only commit and push if there are changes
+          git diff-index --quiet HEAD || (git commit -m "chore: automated commit to keep contributions active [skip ci]" && git push)
