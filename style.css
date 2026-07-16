@@ -1669,6 +1669,7 @@ a {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
+    text-align: center;
 }
 
 .promo-title {
@@ -1693,6 +1694,8 @@ a {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 8px;
+    white-space: nowrap;
     background-color: var(--accent-gold-bright);
     color: var(--primary-color) !important;
     text-decoration: none;
@@ -1714,6 +1717,6 @@ a {
 }
 
 .whatsapp-icon {
-    vertical-align: middle;
-    margin-right: 8px;
+    display: inline-block;
+    flex-shrink: 0;
 }
