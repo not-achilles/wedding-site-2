@@ -32,12 +32,57 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-    
     // ==========================================
-    // 0. Interactive Envelope Invitation Cover
+    // 0. Language Translation Engine
+    // ==========================================
+    let currentLang = 'en';
+    let scratchCardsRevealed = false;
+    
+    function setLanguage(lang) {
+        currentLang = lang;
+        
+        // 1. Update data-en / data-hi attributes
+        document.querySelectorAll('[data-en], [data-hi]').forEach(el => {
+            const val = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-hi');
+            if (val !== null) {
+                el.textContent = val;
+            }
+        });
+        document.querySelectorAll('[data-en-html], [data-hi-html]').forEach(el => {
+            const val = lang === 'en' ? el.getAttribute('data-en-html') : el.getAttribute('data-hi-html');
+            if (val !== null) {
+                el.innerHTML = val;
+            }
+        });
+        
+        // 2. Update toggle button label
+        const langToggle = document.getElementById('langToggle');
+        if (langToggle) {
+            langToggle.textContent = lang === 'en' ? 'हि' : 'EN';
+        }
+        
+        // 3. Re-initialize scratch card ONLY if not yet fully revealed
+        if (!scratchCardsRevealed && typeof initScratchCard === 'function') {
+            initScratchCard(lang);
+        }
+    }
+
+    const langToggle = document.getElementById('langToggle');
+    if (langToggle) {
+        langToggle.addEventListener('click', () => {
+            const targetLang = currentLang === 'en' ? 'hi' : 'en';
+            setLanguage(targetLang);
+        });
+    }
+
+    // ==========================================
+    // 0.1. Interactive Envelope Invitation Cover
     // ==========================================
     const envelopeOverlay = document.getElementById('envelopeOverlay');
     const envelopeWrapper = document.getElementById('envelopeWrapper');
+    const langModal = document.getElementById('langModal');
+    const btnEn = document.getElementById('btnEn');
+    const btnHi = document.getElementById('btnHi');
     
     // Lock body scroll while overlay is active
     let isMainContentVisible = false;
@@ -57,19 +102,51 @@ document.addEventListener('DOMContentLoaded', () => {
                 toggleMusic();
             }
             
-            // 3. Zoom/Expand the card to fill the viewport (at 1.1s, immediately after card slides up)
+            // 3. Show Language Selection Modal after card slides up (at 1.1s)
             setTimeout(() => {
-                envelopeOverlay.classList.add('expand-active');
+                if (langModal) {
+                    langModal.style.display = 'flex';
+                    // Trigger reflow for transition
+                    langModal.offsetHeight;
+                    langModal.classList.add('show');
+                } else {
+                    // Fallback if modal is missing: proceed to zoom
+                    proceedToMainSite('en');
+                }
             }, 1100);
-            
-            // 4. Instantly remove overlay to reveal the main site (at 1.5s, when card reaches 100% size)
-            setTimeout(() => {
-                envelopeOverlay.style.display = 'none';
-                document.body.style.overflow = ''; // Unlock scrolling
-                isMainContentVisible = true;
-            }, 1500);
         });
     }
+
+    function proceedToMainSite(selectedLang) {
+        // Set selected language
+        setLanguage(selectedLang);
+        
+        // Hide Modal
+        if (langModal) {
+            langModal.classList.remove('show');
+            setTimeout(() => {
+                langModal.style.display = 'none';
+            }, 500);
+        }
+        
+        // Zoom/Expand the card to fill the viewport
+        envelopeOverlay.classList.add('expand-active');
+        
+        // Remove overlay to reveal the main site (after zoom completes)
+        setTimeout(() => {
+            envelopeOverlay.style.display = 'none';
+            document.body.style.overflow = ''; // Unlock scrolling
+            isMainContentVisible = true;
+            
+            // Show the floating language toggle
+            if (langToggle) {
+                langToggle.style.display = 'flex';
+            }
+        }, 600); // 600ms matching transition speed
+    }
+
+    if (btnEn) btnEn.addEventListener('click', () => proceedToMainSite('en'));
+    if (btnHi) btnHi.addEventListener('click', () => proceedToMainSite('hi'));
     
     // ==========================================
     // 0.1. Scroll to Bottom Close Envelope Loop
@@ -172,7 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     // 0.5. Interactive Scratch Card Controller (Triple Cards)
     // ==========================================
-    function initScratchCard() {
+    function initScratchCard(lang = 'en') {
         const ids = ['scratchCanvasMonth', 'scratchCanvasDay', 'scratchCanvasYear'];
         const canvases = ids.map(id => document.getElementById(id)).filter(Boolean);
         if (canvases.length < 3) return;
@@ -276,11 +353,11 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             
-            let labelText = 'SCRATCH';
+            let labelText = lang === 'en' ? 'SCRATCH' : 'स्क्रैच';
             if (canvas.id === 'scratchCanvasDay') {
-                labelText = 'TO';
+                labelText = lang === 'en' ? 'TO' : 'करें';
             } else if (canvas.id === 'scratchCanvasYear') {
-                labelText = 'REVEAL';
+                labelText = lang === 'en' ? 'REVEAL' : 'देखें';
             }
             ctx.fillText(labelText, logicalWidth / 2, logicalHeight / 2);
         });
@@ -575,6 +652,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const allDone = Object.values(states).every(s => s.hasRevealed);
             if (allDone) {
                 globalRevealed = true;
+                scratchCardsRevealed = true; // Set outer scope variable to prevent re-initialization
                 document.getElementById('heroRevealWrapper').classList.add('revealed');
                 const scrollIndicator = document.querySelector('.scroll-indicator');
                 if (scrollIndicator) scrollIndicator.style.display = 'none';
@@ -629,8 +707,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // Initialize Scratch Card
-    initScratchCard();
+    // Initialize Scratch Card (will be initialized via setLanguage dynamically)
+    // initScratchCard();
 
     // 1. Countdown Timer (Target: Nov 24, 2026 19:00:00)
     // ==========================================

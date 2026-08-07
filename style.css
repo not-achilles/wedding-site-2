@@ -1656,3 +1656,155 @@ a {
     /* Wait 0.5s (until the letter is inside) before starting to rotate closed */
     transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) 0.5s !important;
 }
+
+/* Language Selection Modal (Glassmorphic) */
+.lang-modal {
+    position: absolute;
+    inset: 0;
+    background: rgba(14, 2, 4, 0.72); /* Luxurious dark crimson-black overlay */
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1005; /* Above envelope letter but below confetti */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.lang-modal.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.lang-modal-content {
+    background: linear-gradient(135deg, #FFFDF0 0%, #F5E0B7 100%); /* Champagne Gold */
+    border: 2px solid var(--accent-gold);
+    border-radius: 16px;
+    padding: 35px 25px;
+    width: 90%;
+    max-width: 380px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+    transform: scale(0.85);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.lang-modal.show .lang-modal-content {
+    transform: scale(1);
+}
+
+.lang-modal-content::after {
+    content: "";
+    position: absolute;
+    inset: 6px;
+    border: 1px dashed rgba(155, 44, 57, 0.25);
+    pointer-events: none;
+    border-radius: 11px;
+}
+
+.lang-modal-content h3 {
+    margin: 5px 0;
+    font-family: var(--font-heading);
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+.lang-modal-content .lang-title-en {
+    font-size: 1.25rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-style: italic;
+}
+
+.lang-modal-content .lang-title-hi {
+    font-size: 1.4rem;
+    margin-top: 10px;
+}
+
+.lang-modal-content .lang-divider {
+    width: 80px;
+    height: 1.5px;
+    background: linear-gradient(90deg, transparent, var(--accent-gold-dark), transparent);
+    margin: 20px auto;
+}
+
+.lang-modal-content .lang-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+.lang-modal-content .lang-btn {
+    padding: 12px 28px;
+    border-radius: 30px;
+    border: 1px solid var(--primary-color);
+    background: transparent;
+    color: var(--primary-color);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-quick);
+    width: 130px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.lang-modal-content .lang-btn:hover {
+    background: var(--primary-color);
+    color: var(--white);
+    box-shadow: 0 6px 15px rgba(155, 44, 57, 0.3);
+    transform: translateY(-1px);
+}
+
+/* Floating Language Toggle Button */
+.lang-toggle {
+    position: fixed;
+    bottom: 30px;
+    right: 95px; /* Offset to sit next to music toggle */
+    z-index: 100;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #FFFDF0 0%, #F5E0B7 100%);
+    color: var(--primary-color);
+    border: 2.5px solid var(--accent-gold-bright);
+    cursor: pointer;
+    box-shadow: 0 5px 25px rgba(155, 44, 57, 0.15);
+    display: none; /* Controlled via JS, only shown after opening cover */
+    justify-content: center;
+    align-items: center;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 700;
+    outline: none;
+    transition: var(--transition-quick);
+    padding: 0;
+}
+
+.lang-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 30px rgba(212, 175, 55, 0.4);
+    border-color: var(--white);
+}
+
+/* Responsive adjustments for floaters */
+@media (max-width: 480px) {
+    .music-toggle {
+        bottom: 20px;
+        right: 20px;
+        width: 48px;
+        height: 48px;
+    }
+    .lang-toggle {
+        bottom: 20px;
+        right: 78px;
+        width: 48px;
+        height: 48px;
+        font-size: 0.85rem;
+    }
+}
