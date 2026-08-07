@@ -120,7 +120,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Programmatically track overscroll/downward gestures at the bottom of the page
     let bottomAttempts = 0;
-    let lastAttemptTime = 0;
     let touchStartY = 0;
 
     function handleGestureDown() {
@@ -133,25 +132,15 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.clientHeight, document.documentElement.clientHeight
         );
         
-        // If we are near the bottom (within 50px)
-        if (scrollPosition >= scrollHeight - 50) {
-            const now = Date.now();
-            // Require at least 600ms between increments to ensure they are distinct physical scrolls/swipes
-            if (now - lastAttemptTime > 600) {
-                bottomAttempts++;
-                lastAttemptTime = now;
-                
-                if (bottomAttempts >= 4) { // Require 4 distinct downward scroll actions
-                    triggerEnvelopeCloseLoop();
-                    bottomAttempts = 0;
-                }
-            }
-        } else {
-            // Only reset the attempts if they scroll back up significantly (e.g. more than 150px)
-            // to avoid resetting due to minor inertia or scroll bounce.
-            if (scrollPosition < scrollHeight - 150) {
+        // If we are at the bottom (within a threshold, say 25px)
+        if (scrollPosition >= scrollHeight - 25) {
+            bottomAttempts++;
+            if (bottomAttempts >= 3) { // Require 3 downward scroll swipes/inputs at the bottom to trigger
+                triggerEnvelopeCloseLoop();
                 bottomAttempts = 0;
             }
+        } else {
+            bottomAttempts = 0;
         }
     }
 
