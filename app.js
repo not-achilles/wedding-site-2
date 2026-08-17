@@ -636,16 +636,33 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
         
-        // Play/Pause button functionality
-        if (playPauseBtn) {
-            playPauseBtn.addEventListener('click', () => {
-                if (popupVideo.paused) {
-                    popupVideo.play();
-                } else {
-                    popupVideo.pause();
-                }
+        // Helper to bind events for both desktop and iOS Safari touch events
+        function bindMediaControl(btn, callback) {
+            if (!btn) return;
+            
+            // Listen to click
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                callback();
             });
+            
+            // Listen to touchstart (crucial for iOS Safari overlay compatibility)
+            btn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                callback();
+            }, { passive: false });
         }
+        
+        // Play/Pause button functionality
+        bindMediaControl(playPauseBtn, () => {
+            if (popupVideo.paused) {
+                popupVideo.play();
+            } else {
+                popupVideo.pause();
+            }
+        });
         
         // Sync play/pause icons with video events
         popupVideo.addEventListener('play', () => {
@@ -664,53 +681,49 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         
         // Unmute button functionality
-        if (unmuteBtn) {
-            unmuteBtn.addEventListener('click', () => {
-                const textSpan = unmuteBtn.querySelector('span');
-                if (popupVideo.muted) {
-                    popupVideo.muted = false;
-                    if (textSpan) {
-                        textSpan.setAttribute('data-en', 'Mute');
-                        textSpan.setAttribute('data-hi', 'आवाज बंद करें');
-                        textSpan.textContent = currentLang === 'en' ? 'Mute' : 'आवाज बंद करें';
-                    }
-                    unmuteBtn.querySelector('svg').innerHTML = `
-                        <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" fill="currentColor"/>
-                    `;
-                } else {
-                    popupVideo.muted = true;
-                    if (textSpan) {
-                        textSpan.setAttribute('data-en', 'Unmute');
-                        textSpan.setAttribute('data-hi', 'आवाज खोलें');
-                        textSpan.textContent = currentLang === 'en' ? 'Unmute' : 'आवाज खोलें';
-                    }
-                    unmuteBtn.querySelector('svg').innerHTML = `
-                        <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM12 4L9.91 6.09 12 8.18V4zm-8 8H6l5 5v-4.18l-1.41-1.41L6.71 12H4c-.55 0-1-.45-1-1s.45-1 1-1h2.71z" fill="currentColor"/>
-                    `;
+        bindMediaControl(unmuteBtn, () => {
+            const textSpan = unmuteBtn.querySelector('span');
+            if (popupVideo.muted) {
+                popupVideo.muted = false;
+                if (textSpan) {
+                    textSpan.setAttribute('data-en', 'Mute');
+                    textSpan.setAttribute('data-hi', 'आवाज बंद करें');
+                    textSpan.textContent = currentLang === 'en' ? 'Mute' : 'आवाज बंद करें';
                 }
-            });
-        }
+                unmuteBtn.querySelector('svg').innerHTML = `
+                    <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" fill="currentColor"/>
+                `;
+            } else {
+                popupVideo.muted = true;
+                if (textSpan) {
+                    textSpan.setAttribute('data-en', 'Unmute');
+                    textSpan.setAttribute('data-hi', 'आवाज खोलें');
+                    textSpan.textContent = currentLang === 'en' ? 'Unmute' : 'आवाज खोलें';
+                }
+                unmuteBtn.querySelector('svg').innerHTML = `
+                    <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM12 4L9.91 6.09 12 8.18V4zm-8 8H6l5 5v-4.18l-1.41-1.41L6.71 12H4c-.55 0-1-.45-1-1s.45-1 1-1h2.71z" fill="currentColor"/>
+                `;
+            }
+        });
         
         // Fullscreen button functionality
-        if (fullscreenBtn) {
-            fullscreenBtn.addEventListener('click', () => {
-                if (popupVideo.requestFullscreen) {
-                    popupVideo.requestFullscreen();
-                } else if (popupVideo.webkitRequestFullscreen) { /* Safari */
-                    popupVideo.webkitRequestFullscreen();
-                } else if (popupVideo.msRequestFullscreen) { /* IE11 */
-                    popupVideo.msRequestFullscreen();
-                }
-            });
-        }
+        bindMediaControl(fullscreenBtn, () => {
+            if (popupVideo.requestFullscreen) {
+                popupVideo.requestFullscreen();
+            } else if (popupVideo.webkitRequestFullscreen) { /* Safari / iOS */
+                popupVideo.webkitRequestFullscreen();
+            } else if (popupVideo.webkitEnterFullscreen) { /* Specific to iOS Safari video elements */
+                popupVideo.webkitEnterFullscreen();
+            } else if (popupVideo.msRequestFullscreen) { /* IE11 */
+                popupVideo.msRequestFullscreen();
+            }
+        });
         
         // Close button functionality
-        if (closeBtn) {
-            closeBtn.addEventListener('click', () => {
-                popupVideo.pause();
-                videoPopup.classList.remove('show');
-            });
-        }
+        bindMediaControl(closeBtn, () => {
+            popupVideo.pause();
+            videoPopup.classList.remove('show');
+        });
     }
     
     // Initialize Scratch Card (will be initialized via setLanguage dynamically)

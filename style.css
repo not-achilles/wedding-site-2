@@ -1903,63 +1903,71 @@ a {
     height: 100%;
     object-fit: cover;
     display: block;
+    pointer-events: none; /* Prevents video itself from intercepting touches on iOS */
 }
 
 .video-popup-close {
     position: absolute;
-    top: 8px;
-    right: 8px;
-    background: rgba(155, 44, 57, 0.85); /* Kumkum Red with transparency */
+    top: 10px;
+    right: 10px;
+    background: rgba(15, 15, 15, 0.75); /* Sleek translucent black */
     color: var(--white);
-    border: 1px solid var(--accent-gold);
-    width: 26px;
-    height: 26px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
     z-index: 1001;
-    transition: var(--transition-quick);
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
 }
 
-.video-popup-close:hover {
+.video-popup-close:hover, .video-popup-close:active {
     background: var(--primary-color);
-    transform: scale(1.1);
+    border-color: var(--white);
+    transform: scale(1.08);
 }
 
 .video-popup-controls {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 8px 10px;
-    background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
     z-index: 1000;
+    pointer-events: auto;
 }
 
 .video-control-btn {
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 20px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(15, 15, 15, 0.75); /* Match close button theme */
+    border: 1px solid rgba(255, 255, 255, 0.2);
     color: var(--white);
-    padding: 4px 12px;
-    font-size: 0.75rem;
-    font-family: var(--font-body);
-    font-weight: 500;
-    cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    transition: var(--transition-quick);
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    padding: 0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
 }
 
-.video-control-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
-    border-color: rgba(255, 255, 255, 0.5);
+.video-control-btn:hover, .video-control-btn:active {
+    background: var(--accent-gold-bright);
+    color: var(--primary-color) !important;
+    border-color: var(--white);
+    transform: scale(1.08);
 }
 
 /* Responsive adjustments for video popup */
