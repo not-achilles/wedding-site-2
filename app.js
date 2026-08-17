@@ -561,6 +561,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const scrollIndicator = document.querySelector('.scroll-indicator');
                 if (scrollIndicator) scrollIndicator.style.display = 'none';
                 fireConfetti();
+                showVideoPopup();
             }
         }
         
@@ -609,6 +610,61 @@ document.addEventListener('DOMContentLoaded', () => {
                 activeCanvasId = null; 
             } 
         });
+    }
+    
+    // Video Popup Control
+    function showVideoPopup() {
+        const videoPopup = document.getElementById('videoPopup');
+        const popupVideo = document.getElementById('popupVideo');
+        const unmuteBtn = document.getElementById('videoUnmuteBtn');
+        const closeBtn = document.getElementById('videoPopupClose');
+        
+        if (!videoPopup || !popupVideo) return;
+        
+        // Show container
+        videoPopup.classList.add('show');
+        
+        // Attempt autoplay (starts muted to avoid browser block)
+        popupVideo.muted = true;
+        popupVideo.play().catch(err => {
+            console.log('Video autoplay blocked or error:', err);
+        });
+        
+        // Unmute button functionality
+        if (unmuteBtn) {
+            unmuteBtn.addEventListener('click', () => {
+                const textSpan = unmuteBtn.querySelector('span');
+                if (popupVideo.muted) {
+                    popupVideo.muted = false;
+                    if (textSpan) {
+                        textSpan.setAttribute('data-en', 'Mute');
+                        textSpan.setAttribute('data-hi', 'आवाज बंद करें');
+                        textSpan.textContent = currentLang === 'en' ? 'Mute' : 'आवाज बंद करें';
+                    }
+                    unmuteBtn.querySelector('svg').innerHTML = `
+                        <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" fill="currentColor"/>
+                    `;
+                } else {
+                    popupVideo.muted = true;
+                    if (textSpan) {
+                        textSpan.setAttribute('data-en', 'Unmute');
+                        textSpan.setAttribute('data-hi', 'आवाज खोलें');
+                        textSpan.textContent = currentLang === 'en' ? 'Unmute' : 'आवाज खोलें';
+                    }
+                    unmuteBtn.querySelector('svg').innerHTML = `
+                        <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM12 4L9.91 6.09 12 8.18V4zm-8 8H6l5 5v-4.18l-1.41-1.41L6.71 12H4c-.55 0-1-.45-1-1s.45-1 1-1h2.71z" fill="currentColor"/>
+                    `;
+                }
+            });
+        }
+        
+        // Close button functionality
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                popupVideo.pause();
+                videoPopup.classList.remove('show');
+            });
+        }
     }
     
     // Initialize Scratch Card (will be initialized via setLanguage dynamically)
