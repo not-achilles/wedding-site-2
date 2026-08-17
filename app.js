@@ -612,11 +612,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
+
     // Video Popup Control
     function showVideoPopup() {
         const videoPopup = document.getElementById('videoPopup');
         const popupVideo = document.getElementById('popupVideo');
+        const playPauseBtn = document.getElementById('videoPlayPauseBtn');
         const unmuteBtn = document.getElementById('videoUnmuteBtn');
+        const fullscreenBtn = document.getElementById('videoFullscreenBtn');
         const closeBtn = document.getElementById('videoPopupClose');
         
         if (!videoPopup || !popupVideo) return;
@@ -628,6 +631,33 @@ document.addEventListener('DOMContentLoaded', () => {
         popupVideo.muted = true;
         popupVideo.play().catch(err => {
             console.log('Video autoplay blocked or error:', err);
+        });
+        
+        // Play/Pause button functionality
+        if (playPauseBtn) {
+            playPauseBtn.addEventListener('click', () => {
+                if (popupVideo.paused) {
+                    popupVideo.play();
+                } else {
+                    popupVideo.pause();
+                }
+            });
+        }
+        
+        // Sync play/pause icons with video events
+        popupVideo.addEventListener('play', () => {
+            if (playPauseBtn) {
+                playPauseBtn.querySelector('svg').innerHTML = `
+                    <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" fill="currentColor"/>
+                `;
+            }
+        });
+        popupVideo.addEventListener('pause', () => {
+            if (playPauseBtn) {
+                playPauseBtn.querySelector('svg').innerHTML = `
+                    <path d="M8 5v14l11-7z" fill="currentColor"/>
+                `;
+            }
         });
         
         // Unmute button functionality
@@ -654,6 +684,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     unmuteBtn.querySelector('svg').innerHTML = `
                         <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM12 4L9.91 6.09 12 8.18V4zm-8 8H6l5 5v-4.18l-1.41-1.41L6.71 12H4c-.55 0-1-.45-1-1s.45-1 1-1h2.71z" fill="currentColor"/>
                     `;
+                }
+            });
+        }
+        
+        // Fullscreen button functionality
+        if (fullscreenBtn) {
+            fullscreenBtn.addEventListener('click', () => {
+                if (popupVideo.requestFullscreen) {
+                    popupVideo.requestFullscreen();
+                } else if (popupVideo.webkitRequestFullscreen) { /* Safari */
+                    popupVideo.webkitRequestFullscreen();
+                } else if (popupVideo.msRequestFullscreen) { /* IE11 */
+                    popupVideo.msRequestFullscreen();
                 }
             });
         }
