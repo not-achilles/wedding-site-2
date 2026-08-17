@@ -671,12 +671,45 @@ document.addEventListener('DOMContentLoaded', () => {
                     <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" fill="currentColor"/>
                 `;
             }
+            // If the video is playing and is NOT muted, pause the site music
+            if (!popupVideo.muted) {
+                if (isPlaying) {
+                    wasMusicPlayingBeforeVideo = true;
+                    isPlaying = false;
+                    pauseSiteMusic();
+                }
+            }
         });
         popupVideo.addEventListener('pause', () => {
             if (playPauseBtn) {
                 playPauseBtn.querySelector('svg').innerHTML = `
                     <path d="M8 5v14l11-7z" fill="currentColor"/>
                 `;
+            }
+            // Auto-resume site music when video is paused
+            if (wasMusicPlayingBeforeVideo) {
+                isPlaying = true;
+                playSiteMusic();
+                wasMusicPlayingBeforeVideo = false;
+            }
+        });
+
+        // Listen for mute/unmute change to sync background music
+        popupVideo.addEventListener('volumechange', () => {
+            if (popupVideo.muted) {
+                // If it is muted (and video is playing), auto-resume site music
+                if (wasMusicPlayingBeforeVideo) {
+                    isPlaying = true;
+                    playSiteMusic();
+                    wasMusicPlayingBeforeVideo = false;
+                }
+            } else {
+                // If it is unmuted (and video is playing), pause site music
+                if (!popupVideo.paused && isPlaying) {
+                    wasMusicPlayingBeforeVideo = true;
+                    isPlaying = false;
+                    pauseSiteMusic();
+                }
             }
         });
         
@@ -723,6 +756,12 @@ document.addEventListener('DOMContentLoaded', () => {
         bindMediaControl(closeBtn, () => {
             popupVideo.pause();
             videoPopup.classList.remove('show');
+            // Auto-resume site music when popup closed
+            if (wasMusicPlayingBeforeVideo) {
+                isPlaying = true;
+                playSiteMusic();
+                wasMusicPlayingBeforeVideo = false;
+            }
         });
     }
     
@@ -797,6 +836,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const musicToggle = document.getElementById('musicToggle');
     let audioCtx = null;
     let isPlaying = false;
+    let wasMusicPlayingBeforeVideo = false; // Auto-resume tracker when video is playing/paused/closed
     let synthTimer = null;
     
     // Jashn-E-Bahaaraa melody sequence
@@ -933,37 +973,47 @@ document.addEventListener('DOMContentLoaded', () => {
         playNextMelodyStep();
     }
     
-    function toggleMusic() {
-        if (isPlaying) {
-            isPlaying = false;
-            if (useMp3) {
-                bgMusic.pause();
-            } else {
-                clearTimeout(synthTimer);
-            }
+    function pauseSiteMusic() {
+        if (useMp3 && bgMusic) {
+            bgMusic.pause();
+        } else {
+            clearTimeout(synthTimer);
+        }
+        if (musicToggle) {
             musicToggle.classList.remove('playing');
             musicToggle.style.backgroundColor = 'var(--primary-color)';
             musicToggle.title = 'Play romantic melody';
-        } else {
-            isPlaying = true;
-            
-            // Try playing the MP3 file first
-            if (useMp3) {
-                const musicPlayPromise = bgMusic.play();
-                if (musicPlayPromise !== undefined && typeof musicPlayPromise.catch === 'function') {
-                    musicPlayPromise.catch(err => {
-                        console.log("MP3 autoplay blocked or file missing. Falling back to Synthesizer.", err);
-                        useMp3 = false;
-                        startSynthesizer();
-                    });
-                }
-            } else {
-                startSynthesizer();
+        }
+    }
+    
+    function playSiteMusic() {
+        if (useMp3 && bgMusic) {
+            const musicPlayPromise = bgMusic.play();
+            if (musicPlayPromise !== undefined && typeof musicPlayPromise.catch === 'function') {
+                musicPlayPromise.catch(err => {
+                    console.log("MP3 play blocked:", err);
+                    useMp3 = false;
+                    startSynthesizer();
+                });
             }
-            
+        } else {
+            startSynthesizer();
+        }
+        if (musicToggle) {
             musicToggle.classList.add('playing');
             musicToggle.style.backgroundColor = 'var(--accent-gold-bright)';
             musicToggle.title = 'Mute music';
+        }
+    }
+
+    function toggleMusic() {
+        if (isPlaying) {
+            isPlaying = false;
+            wasMusicPlayingBeforeVideo = false; // Reset auto-resume state if manually paused
+            pauseSiteMusic();
+        } else {
+            isPlaying = true;
+            playSiteMusic();
         }
     }
     
