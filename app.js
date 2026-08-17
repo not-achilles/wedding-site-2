@@ -629,9 +629,12 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Attempt autoplay (starts muted to avoid browser block)
         popupVideo.muted = true;
-        popupVideo.play().catch(err => {
-            console.log('Video autoplay blocked or error:', err);
-        });
+        const playPromise = popupVideo.play();
+        if (playPromise !== undefined && typeof playPromise.catch === 'function') {
+            playPromise.catch(err => {
+                console.log('Video autoplay blocked or error:', err);
+            });
+        }
         
         // Play/Pause button functionality
         if (playPauseBtn) {
@@ -933,11 +936,14 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Try playing the MP3 file first
             if (useMp3) {
-                bgMusic.play().catch(err => {
-                    console.log("MP3 autoplay blocked or file missing. Falling back to Synthesizer.", err);
-                    useMp3 = false;
-                    startSynthesizer();
-                });
+                const musicPlayPromise = bgMusic.play();
+                if (musicPlayPromise !== undefined && typeof musicPlayPromise.catch === 'function') {
+                    musicPlayPromise.catch(err => {
+                        console.log("MP3 autoplay blocked or file missing. Falling back to Synthesizer.", err);
+                        useMp3 = false;
+                        startSynthesizer();
+                    });
+                }
             } else {
                 startSynthesizer();
             }
