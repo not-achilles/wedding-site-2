@@ -48,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // 1. Seal breaks, caption steps aside
             envelopeOverlay.classList.add('is-opening');
+            envelopeWrapper.blur();
 
             // 2. Play music on this first tap (browsers need a gesture)
             if (typeof toggleMusic === 'function' && !isPlaying) {
