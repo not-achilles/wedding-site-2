@@ -1,4 +1,4 @@
-/* CSS Design System for Rahul & Avishi's Wedding Invitation */
+/* CSS Design System for Avishi & Rahul's Wedding Invitation */
 
 /* CSS Variables */
 :root {
@@ -1028,7 +1028,7 @@ a {
     width: 280px;
     height: 180px;
     transform: translate(-50%, -50%) translateY(5px);
-    background-image: url('images/hero_indian.jpg');
+    background-image: url('images/hero_indian.webp');
     background-size: cover;
     background-position: center;
     border-radius: 4px;
@@ -1658,139 +1658,34 @@ a {
 }
 
 /* Language Selection Modal (Glassmorphic) */
-.lang-modal {
-    position: absolute;
-    inset: 0;
-    background: rgba(14, 2, 4, 0.72); /* Luxurious dark crimson-black overlay */
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1005; /* Above envelope letter but below confetti */
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.5s ease, visibility 0.5s ease;
-}
 
-.lang-modal.show {
-    opacity: 1;
-    visibility: visible;
-}
 
-.lang-modal-content {
-    background: linear-gradient(135deg, #FFFDF0 0%, #F5E0B7 100%); /* Champagne Gold */
-    border: 2px solid var(--accent-gold);
-    border-radius: 16px;
-    padding: 35px 25px;
-    width: 90%;
-    max-width: 380px;
-    text-align: center;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
-    transform: scale(0.85);
-    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    position: relative;
-    overflow: hidden;
-}
 
-.lang-modal.show .lang-modal-content {
-    transform: scale(1);
-}
 
-.lang-modal-content::after {
-    content: "";
-    position: absolute;
-    inset: 6px;
-    border: 1px dashed rgba(155, 44, 57, 0.25);
-    pointer-events: none;
-    border-radius: 11px;
-}
 
-.lang-modal-content h3 {
-    margin: 5px 0;
-    font-family: var(--font-heading);
-    font-weight: 500;
-    color: var(--primary-color);
-}
 
-.lang-modal-content .lang-title-en {
-    font-size: 1.25rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    font-style: italic;
-}
 
-.lang-modal-content .lang-title-hi {
-    font-size: 1.4rem;
-    margin-top: 10px;
-}
 
-.lang-modal-content .lang-divider {
-    width: 80px;
-    height: 1.5px;
-    background: linear-gradient(90deg, transparent, var(--accent-gold-dark), transparent);
-    margin: 20px auto;
-}
 
-.lang-modal-content .lang-buttons {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    margin-top: 25px;
-}
 
-.lang-modal-content .lang-btn {
-    padding: 12px 28px;
-    border-radius: 30px;
-    border: 1px solid var(--primary-color);
-    background: transparent;
-    color: var(--primary-color);
-    font-family: var(--font-body);
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition-quick);
-    width: 130px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-}
 
-.lang-modal-content .lang-btn:hover {
-    background: var(--primary-color);
-    color: var(--white);
-    box-shadow: 0 6px 15px rgba(155, 44, 57, 0.3);
-    transform: translateY(-1px);
-}
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* Floating Language Toggle Button */
-.lang-toggle {
-    position: fixed;
-    bottom: 30px;
-    right: 95px; /* Offset to sit next to music toggle */
-    z-index: 100;
-    width: 55px;
-    height: 55px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #FFFDF0 0%, #F5E0B7 100%);
-    color: var(--primary-color);
-    border: 2.5px solid var(--accent-gold-bright);
-    cursor: pointer;
-    box-shadow: 0 5px 25px rgba(155, 44, 57, 0.15);
-    display: none; /* Controlled via JS, only shown after opening cover */
-    justify-content: center;
-    align-items: center;
-    font-family: var(--font-body);
-    font-size: 0.95rem;
-    font-weight: 700;
-    outline: none;
-    transition: var(--transition-quick);
-    padding: 0;
-}
 
-.lang-toggle:hover {
-    transform: scale(1.1);
-    box-shadow: 0 8px 30px rgba(212, 175, 55, 0.4);
-    border-color: var(--white);
-}
+
+
 
 /* Responsive adjustments for floaters */
 @media (max-width: 480px) {
@@ -1800,13 +1695,7 @@ a {
         width: 48px;
         height: 48px;
     }
-    .lang-toggle {
-        bottom: 20px;
-        right: 78px;
-        width: 48px;
-        height: 48px;
-        font-size: 0.85rem;
-    }
+    
 }
 
 /* Custom Promo Box Styles */
@@ -1979,4 +1868,477 @@ a {
         aspect-ratio: 9/16;
         border-width: 2px;
     }
+}
+
+/* =========================================================
+   Avishi weds Rahul · additions (v3)
+   ========================================================= */
+
+/* Envelope cover: names above the title */
+.envelope-kicker {
+    font-family: 'Pinyon Script', cursive;
+    font-size: 2rem;
+    color: var(--accent-gold-dark);
+    margin-bottom: -6px;
+    letter-spacing: 0;
+}
+.envelope-kicker span { color: var(--primary-color); }
+
+/* Hero subtitle (Shubh Vivah) */
+.hero-subtitle {
+    font-size: 0.8rem;
+    letter-spacing: 0.45em;
+    margin-bottom: 6px;
+}
+
+/* Scratch card fallback for anyone who can't scratch */
+.scratch-skip {
+    margin-top: 12px;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.78);
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+    padding: 8px 12px;
+}
+.scratch-skip:hover, .scratch-skip:focus-visible { color: var(--accent-gold-bright); }
+.scratch-cards-wrapper.done .scratch-skip,
+.scratch-cards-wrapper.done .scratch-hint { visibility: hidden; }
+
+.countdown-done {
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-size: 1.3rem;
+    color: var(--white);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    margin-bottom: 30px;
+}
+
+.story-invite { margin-bottom: 50px; }
+
+/* Families: bride & groom presented as a pair */
+.grandparents-section { margin-bottom: 30px; position: relative; z-index: 2; }
+.grandparents-section .side-label {
+    color: var(--accent-gold-dark);
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+.grandparents-section .parent-name { font-size: 1.35rem; margin: 2px 0; }
+.families-rule {
+    width: 100px; height: 1px; margin: 0 auto 30px;
+    background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+}
+.families-grid { position: relative; z-index: 2; }
+.family-side .side-label {
+    color: var(--accent-gold-dark);
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    margin-bottom: 0;
+}
+.couple-name {
+    font-family: 'Pinyon Script', cursive;
+    font-size: 3.2rem;
+    line-height: 1.15;
+    color: var(--primary-color);
+    margin: 2px 0 2px;
+}
+.relation {
+    display: block;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 8px;
+}
+.family-side .parent-name { font-size: 1.2rem; font-weight: 500; margin: 2px 0; }
+.family-divider { position: relative; display: flex; align-items: center; justify-content: center; }
+.family-heart {
+    position: absolute;
+    background: var(--canvas-bg);
+    color: var(--accent-gold);
+    font-size: 1rem;
+    line-height: 1;
+    padding: 6px 0;
+}
+
+/* Schedule at a glance */
+.schedule-strip {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    margin: 34px auto 6px;
+    max-width: 720px;
+    padding: 0;
+    position: relative;
+}
+.schedule-strip li {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    position: relative;
+    padding-top: 22px;
+    min-width: 0;
+}
+.schedule-strip li::before {
+    content: "";
+    position: absolute;
+    top: 6px;
+    width: 11px; height: 11px;
+    border-radius: 50%;
+    background: var(--canvas-bg);
+    border: 2px solid var(--accent-gold);
+    z-index: 1;
+}
+.schedule-strip li::after {
+    content: "";
+    position: absolute;
+    top: 11px; left: 50%;
+    width: 100%; height: 1px;
+    background: rgba(197, 168, 128, 0.55);
+}
+.schedule-strip li:last-child::after { display: none; }
+.schedule-strip .ss-main::before { background: var(--accent-gold-bright); border-color: var(--primary-color); transform: scale(1.25); }
+.ss-date {
+    font-family: var(--font-heading);
+    font-style: italic;
+    color: var(--primary-color);
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+.ss-name {
+    font-size: 0.66rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-light);
+    text-align: center;
+    line-height: 1.35;
+    padding: 0 4px;
+}
+
+/* Event card back: tidy layout + actions */
+.event-card:focus-visible { outline: 2px solid var(--accent-gold-bright); outline-offset: 6px; border-radius: 14px; }
+.event-card-back { padding: 26px 20px; }
+.event-card-back .event-location-text { margin-bottom: 16px; }
+.event-card-back.compact .event-name { font-size: 1.45rem; margin-bottom: 2px; }
+.event-card-back.compact .event-date-time { font-size: 0.82rem; margin-bottom: 2px; }
+.event-card-back.compact .event-divider { margin: 6px auto 10px; }
+.event-card-back.compact .event-location-title { margin-bottom: 0; }
+.event-card-back.compact .event-location-text { font-size: 0.95rem; margin-bottom: 12px; }
+.sub-events-list {
+    list-style: none;
+    width: 100%;
+    padding: 0 14px;
+    margin: 0 0 12px;
+}
+.sub-events-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+    padding: 5px 0;
+    border-bottom: 1px dotted rgba(155, 44, 57, 0.2);
+}
+.sub-events-list li:last-child { border-bottom: none; }
+.sub-name {
+    font-family: var(--font-heading);
+    color: var(--primary-color);
+    font-size: 0.88rem;
+    font-style: italic;
+    font-weight: 600;
+    text-align: left;
+}
+.sub-time { color: #2b1b1d; font-size: 0.74rem; white-space: nowrap; }
+
+.event-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    position: relative;
+    z-index: 3;
+}
+.event-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 7px 12px;
+    border-radius: 30px;
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    background: rgba(255, 255, 255, 0.55);
+    white-space: nowrap;
+}
+.event-action.solid { background: var(--primary-color); color: var(--white); }
+.event-action:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(155, 44, 57, 0.25); }
+
+/* Venue */
+.venue-container { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.map-embed-container { width: 100%; }
+
+/* Footer bits */
+.contact-link svg { margin-right: 6px; }
+.controls-right { display: flex; gap: 8px; align-items: center; }
+.footer-tagline { margin-top: 15px; }
+
+@media (max-width: 768px) {
+    .family-divider { width: 60px; height: 1px; }
+    .couple-name { font-size: 2.8rem; }
+    .ss-date { font-size: 0.92rem; }
+    .ss-name { font-size: 0.58rem; letter-spacing: 0.06em; }
+    .envelope-kicker { font-size: 1.7rem; }
+}
+
+/* Respect people who turn off animations */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+    #petalCanvas { display: none; }
+    .event-card-inner { animation: none !important; }
+}
+
+
+/* Venue switcher: Indore + Khargone */
+.venue-switch { display: flex; gap: 12px; justify-content: center; margin-top: 18px; flex-wrap: wrap; }
+.venue-tab {
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    min-width: 150px; padding: 12px 18px;
+    border: 1px solid rgba(197, 168, 128, 0.6); border-radius: 12px;
+    background: var(--white); color: var(--text-light);
+    font-family: var(--font-body); cursor: pointer; transition: var(--transition-quick);
+}
+.venue-tab:hover { border-color: var(--accent-gold); }
+.venue-tab.active { border-color: var(--primary-color); background: #FFF8F0; box-shadow: var(--box-shadow-soft); }
+.vt-dates { font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent-gold-dark); font-weight: 600; }
+.vt-name { font-family: var(--font-heading); font-style: italic; font-size: 1.15rem; color: var(--primary-color); }
+.vt-city { font-size: 0.75rem; }
+.ss-city { font-size: 0.6rem; color: var(--accent-gold-dark); font-style: italic; margin-top: -4px; }
+@media (max-width: 480px) { .venue-tab { min-width: 0; flex: 1; padding: 10px 8px; } }
+
+/* Map card (used where Google Maps can't be embedded) */
+.map-card {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+    width: 100%; min-height: 260px; margin-top: 30px; padding: 30px 20px;
+    border-radius: 12px; border: 1px solid rgba(197, 168, 128, 0.6);
+    background:
+        repeating-linear-gradient(0deg, rgba(197,168,128,0.12) 0 1px, transparent 1px 38px),
+        repeating-linear-gradient(90deg, rgba(197,168,128,0.12) 0 1px, transparent 1px 38px),
+        #FBF6EE;
+    color: var(--primary-color); text-align: center;
+}
+.map-card:hover { box-shadow: var(--box-shadow-medium); }
+.map-card .mc-pin { width: 44px; height: 44px; color: var(--primary-color); }
+.map-card .mc-name { font-family: var(--font-heading); font-style: italic; font-size: 1.6rem; }
+.map-card .mc-addr { font-size: 0.85rem; color: var(--text-light); }
+.map-card .mc-cta { margin-top: 6px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; border-bottom: 1px solid currentColor; padding-bottom: 2px; }
+
+/* =========================================================
+   Motion (shared by both invitation sites)
+   ========================================================= */
+
+/* --- Envelope: the seal breathes and sends out a gold ripple, inviting a tap --- */
+.envelope-wrapper:not(.open) .seal-img { animation: sealBreath 2.6s ease-in-out infinite; }
+.envelope-wrapper:not(.open) .envelope-seal::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    border: 1.5px solid var(--accent-gold-bright);
+    animation: sealRipple 2.6s ease-out infinite;
+    pointer-events: none;
+}
+@keyframes sealBreath { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.07); } }
+@keyframes sealRipple { 0% { transform: scale(1); opacity: 0.9; } 100% { transform: scale(1.9); opacity: 0; } }
+
+/* --- Hero: slow drift on the palace backdrop --- */
+.hero-bg { animation: kenBurns 26s ease-in-out infinite alternate; transition: none; }
+.hero-section:hover .hero-bg { transform: none; }
+@keyframes kenBurns {
+    from { transform: scale(1.05) translate3d(0, 0, 0); }
+    to   { transform: scale(1.14) translate3d(-1.2%, -1.5%, 0); }
+}
+.hero-content { will-change: transform, opacity; }
+
+/* --- Hero intro: plays once the envelope has opened --- */
+.intro-item { opacity: 0; }
+body.intro-play .intro-item { animation: introRise 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) both; animation-delay: var(--d, 0ms); }
+@keyframes introRise {
+    from { opacity: 0; transform: translateY(26px); filter: blur(6px); }
+    to   { opacity: 1; transform: none; filter: none; }
+}
+
+/* The monogram lands like a seal being pressed, then keeps a soft gold glow */
+body.intro-play .intro-seal {
+    animation: sealPress 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) both, logoGlow 4.5s ease-in-out 2.2s infinite;
+    animation-delay: var(--d, 0ms), 2.2s;
+}
+@keyframes sealPress {
+    0%   { opacity: 0; transform: scale(0.35) rotate(-28deg); }
+    60%  { opacity: 1; }
+    100% { opacity: 1; transform: scale(1) rotate(0); }
+}
+@keyframes logoGlow {
+    0%, 100% { box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), 0 0 0 0 rgba(212, 175, 55, 0); }
+    50%      { box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), 0 0 0 9px rgba(212, 175, 55, 0.18), 0 0 38px 6px rgba(212, 175, 55, 0.35); }
+}
+
+/* "Shubh Vivah" tracks in from wide spacing */
+body.intro-play .intro-track { animation-name: trackIn; animation-duration: 1.6s; }
+@keyframes trackIn {
+    from { opacity: 0; letter-spacing: 1.3em; filter: blur(4px); }
+    to   { opacity: 1; letter-spacing: 0.45em; filter: none; }
+}
+
+/* Names: each letter rises out of a soft blur; the ampersand arrives in gold, last */
+.hero-title .ch { display: inline-block; opacity: 0; }
+.hero-title .ch.amp { color: var(--accent-gold-bright); }
+body.intro-play .hero-title .ch {
+    animation: charRise 0.95s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    animation-delay: calc(var(--d, 0ms) + var(--ci) * 55ms);
+}
+body.intro-play .hero-title .ch.amp {
+    animation: ampBloom 1.1s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    animation-delay: calc(var(--d, 0ms) + 900ms);
+}
+@keyframes charRise {
+    from { opacity: 0; transform: translateY(0.55em) rotate(6deg); filter: blur(8px); }
+    to   { opacity: 1; transform: none; filter: none; }
+}
+@keyframes ampBloom {
+    from { opacity: 0; transform: scale(0.2) rotate(-40deg); }
+    to   { opacity: 1; transform: none; }
+}
+
+/* Scratch cards deal in one after another */
+body.intro-play .scratch-card-col { animation: dealIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+body.intro-play .scratch-card-col:nth-child(1) { animation-delay: 1600ms; }
+body.intro-play .scratch-card-col:nth-child(2) { animation-delay: 1720ms; }
+body.intro-play .scratch-card-col:nth-child(3) { animation-delay: 1840ms; }
+@keyframes dealIn {
+    from { opacity: 0; transform: translateY(-40px) rotate(-8deg) scale(0.9); }
+    to   { opacity: 1; transform: none; }
+}
+
+/* Revealed date and the gold light sweeping across the CTA */
+.hero-reveal-wrapper.revealed .scratch-card-reveal { animation: none; }
+.cta-button::after {
+    content: "";
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 40%;
+    left: -60%;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+    transform: skewX(-20deg);
+    animation: sheen 5.5s ease-in-out 3.2s infinite;
+    pointer-events: none;
+}
+@keyframes sheen { 0%, 70% { left: -60%; } 100% { left: 130%; } }
+
+/* Countdown digits drop in when they change */
+.countdown-number { display: inline-block; }
+.countdown-number.tick { animation: tickIn 0.45s cubic-bezier(0.2, 0.8, 0.2, 1); }
+@keyframes tickIn { from { opacity: 0; transform: translateY(-45%); } to { opacity: 1; transform: none; } }
+
+/* --- Section headers: gold rule draws outward, then the diamond turns into place --- */
+.section-header.fade-up .decorative-line {
+    transform: scaleX(0);
+    transition: transform 1.1s cubic-bezier(0.65, 0, 0.35, 1) 0.35s;
+}
+.section-header.fade-up .decorative-line::after {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(-180deg) scale(0.3);
+    transition: opacity 0.6s ease 1s, transform 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) 1s;
+}
+.section-header.visible .decorative-line { transform: scaleX(1); }
+.section-header.visible .decorative-line::after { opacity: 1; transform: translate(-50%, -50%) rotate(0) scale(1); }
+
+/* --- Our Story: polaroids develop like instant film --- */
+.polaroid-image-wrapper { position: relative; }
+.polaroid-image-wrapper img {
+    filter: sepia(0.7) saturate(0.35) brightness(1.5) contrast(0.7) blur(2px);
+    transition: filter 2.4s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.6s ease;
+}
+.polaroid-image-wrapper::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: #fffdf6;
+    opacity: 0.9;
+    transition: opacity 1.6s ease 0.1s;
+    pointer-events: none;
+}
+.polaroid-card.developed .polaroid-image-wrapper img { filter: none; }
+.polaroid-card.developed .polaroid-image-wrapper::after { opacity: 0; }
+.polaroid-caption > * { opacity: 0; transform: translateY(8px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.polaroid-card.developed .polaroid-caption > * { opacity: 1; transform: none; }
+.polaroid-card.developed .polaroid-caption > :nth-child(1) { transition-delay: 0.9s; }
+.polaroid-card.developed .polaroid-caption > :nth-child(2) { transition-delay: 1.1s; }
+.polaroid-card.developed .polaroid-caption > :nth-child(3) { transition-delay: 1.4s; }
+
+/* --- Families: the two sides meet in the middle, the heart beats --- */
+.families-card.fade-up .grandparents-section,
+.families-card.fade-up .family-side { transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.families-card.fade-up .grandparents-section { opacity: 0; transform: translateY(14px); transition-delay: 0.25s; }
+.families-card.fade-up .family-side:first-child { opacity: 0; transform: translateX(-36px); transition-delay: 0.55s; }
+.families-card.fade-up .family-side:last-child { opacity: 0; transform: translateX(36px); transition-delay: 0.55s; }
+.families-card.visible .grandparents-section,
+.families-card.visible .family-side:first-child,
+.families-card.visible .family-side:last-child { opacity: 1; transform: none; }
+.families-card.visible .family-heart { animation: heartBeat 1.3s ease-in-out 1.3s 2; }
+@keyframes heartBeat {
+    0%, 100% { transform: scale(1); }
+    15% { transform: scale(1.45); }
+    30% { transform: scale(1); }
+    45% { transform: scale(1.3); }
+}
+
+/* --- Schedule strip: the thread draws from date to date --- */
+.schedule-strip li:nth-child(1) { --n: 0; }
+.schedule-strip li:nth-child(2) { --n: 1; }
+.schedule-strip li:nth-child(3) { --n: 2; }
+.schedule-strip li:nth-child(4) { --n: 3; }
+.schedule-strip.fade-up li::before { transform: scale(0); transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) calc(var(--n) * 0.32s + 0.3s); }
+.schedule-strip.fade-up li::after { transform: scaleX(0); transform-origin: left; transition: transform 0.35s ease calc(var(--n) * 0.32s + 0.5s); }
+.schedule-strip.fade-up li > * { opacity: 0; transition: opacity 0.6s ease calc(var(--n) * 0.32s + 0.35s); }
+.schedule-strip.visible li::before { transform: scale(1); }
+.schedule-strip.visible .ss-main::before { transform: scale(1.25); }
+.schedule-strip.visible li::after { transform: scaleX(1); }
+.schedule-strip.visible li > * { opacity: 1; }
+
+/* --- Event cards rise and tip forward, dealt out left to right --- */
+.events-grid-container .event-card.fade-up {
+    transform: perspective(1000px) translateY(70px) rotateX(20deg);
+    transform-origin: 50% 100%;
+    transition: opacity 0.9s ease, transform 1.1s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition-delay: calc(var(--i, 0) * 120ms);
+}
+.events-grid-container .event-card.fade-up.visible { transform: none; }
+
+/* --- Venue tabs and map --- */
+.venue-tab { position: relative; overflow: hidden; }
+.venue-tab.active::after {
+    content: "";
+    position: absolute;
+    left: 20%; right: 20%; bottom: 0;
+    height: 2px;
+    background: var(--accent-gold-bright);
+    animation: tabLine 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes tabLine { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+@media (prefers-reduced-motion: reduce) {
+    .intro-item, .hero-title .ch, .polaroid-caption > * { opacity: 1 !important; transform: none !important; filter: none !important; }
+    .polaroid-image-wrapper img { filter: none !important; }
+    .polaroid-image-wrapper::after { opacity: 0 !important; }
+    .hero-bg, .cta-button::after { animation: none !important; }
 }

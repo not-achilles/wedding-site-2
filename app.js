@@ -1,5 +1,5 @@
 /**
- * Rahul & Avishi's Wedding Invitation Website - Application Script
+ * Avishi & Rahul's Wedding Invitation Website - Application Script
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -13,76 +13,18 @@ document.addEventListener('DOMContentLoaded', () => {
         window.scrollTo(0, 0);
     });
     
-    // Automatic fallback for local testing if logo file is not copied to images/ logo yet
-    const isLocal = window.location.protocol === 'file:' || 
-                    window.location.hostname === 'localhost' || 
-                    window.location.hostname === '127.0.0.1';
-    
-    if (isLocal) {
-        const cacheLogoPath = 'file:///C:/Users/anmol/.gemini/antigravity/brain/c78c7729-ecdd-493e-a8a0-71f7665c4eed/media__1783946193874.jpg';
-        document.querySelectorAll('img').forEach(img => {
-            img.addEventListener('error', function handleImgError() {
-                if (this.src.includes('logo.png')) {
-                    this.src = cacheLogoPath;
-                    this.removeEventListener('error', handleImgError);
-                }
-            });
-            if (img.complete && img.naturalWidth === 0 && img.src.includes('logo.png')) {
-                img.src = cacheLogoPath;
-            }
-        });
-    }
+    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     // ==========================================
     // 0. Language Translation Engine
     // ==========================================
-    let currentLang = 'en';
     let scratchCardsRevealed = false;
-    
-    function setLanguage(lang) {
-        currentLang = lang;
-        
-        // 1. Update data-en / data-hi attributes
-        document.querySelectorAll('[data-en], [data-hi]').forEach(el => {
-            const val = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-hi');
-            if (val !== null) {
-                el.textContent = val;
-            }
-        });
-        document.querySelectorAll('[data-en-html], [data-hi-html]').forEach(el => {
-            const val = lang === 'en' ? el.getAttribute('data-en-html') : el.getAttribute('data-hi-html');
-            if (val !== null) {
-                el.innerHTML = val;
-            }
-        });
-        
-        // 2. Update toggle button label
-        const langToggle = document.getElementById('langToggle');
-        if (langToggle) {
-            langToggle.textContent = lang === 'en' ? 'हि' : 'EN';
-        }
-        
-        // 3. Re-initialize scratch card ONLY if not yet fully revealed
-        if (!scratchCardsRevealed && typeof initScratchCard === 'function') {
-            initScratchCard(lang);
-        }
-    }
-
-    const langToggle = document.getElementById('langToggle');
-    if (langToggle) {
-        langToggle.addEventListener('click', () => {
-            const targetLang = currentLang === 'en' ? 'hi' : 'en';
-            setLanguage(targetLang);
-        });
-    }
 
     // ==========================================
     // 0.1. Interactive Envelope Invitation Cover
     // ==========================================
     const envelopeOverlay = document.getElementById('envelopeOverlay');
     const envelopeWrapper = document.getElementById('envelopeWrapper');
-    const langModal = document.getElementById('langModal');
-    const btnEn = document.getElementById('btnEn');
-    const btnHi = document.getElementById('btnHi');
     
     // Lock body scroll while overlay is active
     let isMainContentVisible = false;
@@ -91,6 +33,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     if (envelopeWrapper && envelopeOverlay) {
+        envelopeWrapper.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); envelopeWrapper.click(); }
+        });
         envelopeWrapper.addEventListener('click', () => {
             if (envelopeWrapper.classList.contains('open')) return;
             
@@ -102,32 +47,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 toggleMusic();
             }
             
-            // 3. Show Language Selection Modal after card slides up (at 1.1s)
+            // 3. Once the card has slid out, open the invitation
             setTimeout(() => {
-                if (langModal) {
-                    langModal.style.display = 'flex';
-                    // Trigger reflow for transition
-                    langModal.offsetHeight;
-                    langModal.classList.add('show');
-                } else {
-                    // Fallback if modal is missing: proceed to zoom
-                    proceedToMainSite('en');
-                }
+                proceedToMainSite();
             }, 1100);
         });
     }
 
-    function proceedToMainSite(selectedLang) {
-        // Set selected language
-        setLanguage(selectedLang);
-        
-        // Hide Modal
-        if (langModal) {
-            langModal.classList.remove('show');
-            setTimeout(() => {
-                langModal.style.display = 'none';
-            }, 500);
-        }
+    function proceedToMainSite() {
+        if (!scratchCardsRevealed) initScratchCard();
         
         // Zoom/Expand the card to fill the viewport
         envelopeOverlay.classList.add('expand-active');
@@ -136,40 +64,40 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             envelopeOverlay.style.display = 'none';
             document.body.style.overflow = ''; // Unlock scrolling
+            playIntro();
             isMainContentVisible = true;
-            
-            // Show the floating language toggle
-            if (langToggle) {
-                langToggle.style.display = 'flex';
-            }
         }, 600); // 600ms matching transition speed
     }
 
-    if (btnEn) btnEn.addEventListener('click', () => proceedToMainSite('en'));
-    if (btnHi) btnHi.addEventListener('click', () => proceedToMainSite('hi'));
     
     // (Scroll to Bottom Close Envelope Loop removed as requested)
     
     // ==========================================
     // 0.5. Interactive Scratch Card Controller (Triple Cards)
     // ==========================================
-    function initScratchCard(lang = 'en') {
+    // Scratch state lives outside initScratchCard so switching language
+    // redraws the cards without stacking duplicate event listeners.
+    let scratchStates = null;
+    let scratchBound = false;
+    let isDrawing = false;
+    let activeCanvasId = null;
+    let globalRevealed = false;
+    let revealAllScratch = () => {};
+
+    function initScratchCard() {
         const ids = ['scratchCanvasMonth', 'scratchCanvasDay', 'scratchCanvasYear'];
         const canvases = ids.map(id => document.getElementById(id)).filter(Boolean);
         if (canvases.length < 3) return;
         
-        const states = {
-            scratchCanvasMonth: { canvas: canvases[0], ctx: canvases[0].getContext('2d'), hasRevealed: false },
-            scratchCanvasDay: { canvas: canvases[1], ctx: canvases[1].getContext('2d'), hasRevealed: false },
-            scratchCanvasYear: { canvas: canvases[2], ctx: canvases[2].getContext('2d'), hasRevealed: false }
-        };
-        
-        let isDrawing = false;
-        let activeCanvasId = null;
-        let globalRevealed = false;
+        if (!scratchStates) {
+            scratchStates = {};
+            canvases.forEach(c => { scratchStates[c.id] = { canvas: c, ctx: c.getContext('2d'), hasRevealed: false }; });
+        }
+        const states = scratchStates;
         
         // Setup visual parameters for each canvas
         canvases.forEach(canvas => {
+            if (states[canvas.id].hasRevealed) return;
             const ctx = canvas.getContext('2d');
             const dpr = window.devicePixelRatio || 1;
             const logicalWidth = canvas.clientWidth || canvas.width || 120;
@@ -257,16 +185,17 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             
-            let labelText = lang === 'en' ? 'SCRATCH' : 'स्क्रैच';
+            let labelText = 'SCRATCH';
             if (canvas.id === 'scratchCanvasDay') {
-                labelText = lang === 'en' ? 'TO' : 'करें';
+                labelText = 'TO';
             } else if (canvas.id === 'scratchCanvasYear') {
-                labelText = lang === 'en' ? 'REVEAL' : 'देखें';
+                labelText = 'REVEAL';
             }
             ctx.fillText(labelText, logicalWidth / 2, logicalHeight / 2);
         });
         
         function fireConfetti() {
+            if (prefersReducedMotion) return;
             const confettiCanvas = document.createElement('canvas');
             confettiCanvas.style.position = 'fixed';
             confettiCanvas.style.top = '0';
@@ -505,9 +434,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!state || state.hasRevealed) return;
             
             const rect = state.canvas.getBoundingClientRect();
-            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-            if (!clientX || !clientY) return;
+            const point = (e.touches && e.touches[0]) ? e.touches[0] : e;
+            const clientX = point.clientX;
+            const clientY = point.clientY;
+            if (typeof clientX !== 'number' || typeof clientY !== 'number') return;
             
             const x = clientX - rect.left;
             const y = clientY - rect.top;
@@ -558,6 +488,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 globalRevealed = true;
                 scratchCardsRevealed = true; // Set outer scope variable to prevent re-initialization
                 document.getElementById('heroRevealWrapper').classList.add('revealed');
+                const wrap = document.getElementById('scratchCardContainer');
+                if (wrap) wrap.classList.add('done');
                 const scrollIndicator = document.querySelector('.scroll-indicator');
                 if (scrollIndicator) scrollIndicator.style.display = 'none';
                 fireConfetti();
@@ -565,7 +497,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         
-        // Attach event listeners to all canvases
+        revealAllScratch = () => {
+            Object.values(states).forEach(state => {
+                if (state.hasRevealed) return;
+                state.hasRevealed = true;
+                state.canvas.classList.add('scratch-canvas-fade');
+                setTimeout(() => { state.canvas.style.display = 'none'; }, 500);
+            });
+            checkAllRevealed();
+        };
+
+        if (scratchBound) return;
+        scratchBound = true;
+
+        // Attach event listeners to all canvases (once)
         canvases.forEach(canvas => {
             const id = canvas.id;
             
@@ -585,14 +530,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 isDrawing = true; 
                 activeCanvasId = id; 
                 scratch(id, e); 
-            });
+            }, { passive: true });
             
             canvas.addEventListener('touchmove', (e) => {
                 if (isDrawing && activeCanvasId === id) {
                     e.preventDefault();
                     scratch(id, e);
                 }
-            });
+            }, { passive: false });
         });
         
         window.addEventListener('mouseup', () => { 
@@ -613,6 +558,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
 
+    const scratchSkip = document.getElementById('scratchSkip');
+    if (scratchSkip) scratchSkip.addEventListener('click', () => revealAllScratch());
+
     // Video Popup Control
     function showVideoPopup() {
         const videoPopup = document.getElementById('videoPopup');
@@ -626,6 +574,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Show container
         videoPopup.classList.add('show');
+        popupVideo.preload = 'auto';
         
         // Attempt autoplay (starts UNMUTED by default to play video sound immediately)
         popupVideo.muted = false;
@@ -705,18 +654,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const textSpan = unmuteBtn.querySelector('span');
             if (popupVideo.muted) {
                 if (textSpan) {
-                    textSpan.setAttribute('data-en', 'Unmute');
-                    textSpan.setAttribute('data-hi', 'आवाज खोलें');
-                    textSpan.textContent = currentLang === 'en' ? 'Unmute' : 'आवाज खोलें';
+                    textSpan.textContent = 'Unmute';
                 }
                 unmuteBtn.querySelector('svg').innerHTML = `
                     <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.21.05-.42.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" fill="currentColor"/>
                 `;
             } else {
                 if (textSpan) {
-                    textSpan.setAttribute('data-en', 'Mute');
-                    textSpan.setAttribute('data-hi', 'आवाज बंद करें');
-                    textSpan.textContent = currentLang === 'en' ? 'Mute' : 'आवाज बंद करें';
+                    textSpan.textContent = 'Mute';
                 }
                 unmuteBtn.querySelector('svg').innerHTML = `
                     <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" fill="currentColor"/>
@@ -779,7 +724,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // Initialize Scratch Card (will be initialized via setLanguage dynamically)
     // initScratchCard();
 
     // 1. Countdown Timer (Target: Nov 24, 2026 19:00:00)
@@ -798,6 +742,10 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (difference < 0) {
             // Marriage day has arrived or passed
+            const cd = document.getElementById('countdown');
+            const done = document.getElementById('countdownDone');
+            if (cd) cd.style.display = 'none';
+            if (done) done.hidden = false;
             if (daysEl) daysEl.innerText = '00';
             if (hoursEl) hoursEl.innerText = '00';
             if (minutesEl) minutesEl.innerText = '00';
@@ -811,11 +759,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((difference % (1000 * 60)) / 1000);
         
-        // Padding
-        if (daysEl) daysEl.innerText = days < 10 ? '0' + days : days;
-        if (hoursEl) hoursEl.innerText = hours < 10 ? '0' + hours : hours;
-        if (minutesEl) minutesEl.innerText = minutes < 10 ? '0' + minutes : minutes;
-        if (secondsEl) secondsEl.innerText = seconds < 10 ? '0' + seconds : seconds;
+        // Padding, with a small drop-in whenever a digit changes
+        const setNum = (el, n) => {
+            if (!el) return;
+            const v = n < 10 ? '0' + n : String(n);
+            if (el.textContent === v) return;
+            el.textContent = v;
+            el.classList.remove('tick');
+            void el.offsetWidth;
+            el.classList.add('tick');
+        };
+        setNum(daysEl, days);
+        setNum(hoursEl, hours);
+        setNum(minutesEl, minutes);
+        setNum(secondsEl, seconds);
     }
     
     // Initial run and repeat every second
@@ -996,7 +953,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (musicToggle) {
             musicToggle.classList.remove('playing');
             musicToggle.style.backgroundColor = 'var(--primary-color)';
-            musicToggle.title = 'Play romantic melody';
+            musicToggle.title = 'Play music';
+            musicToggle.setAttribute('aria-pressed', 'false');
+            musicToggle.setAttribute('aria-label', 'Play music');
         }
     }
     
@@ -1016,7 +975,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (musicToggle) {
             musicToggle.classList.add('playing');
             musicToggle.style.backgroundColor = 'var(--accent-gold-bright)';
-            musicToggle.title = 'Mute music';
+            musicToggle.title = 'Pause music';
+            musicToggle.setAttribute('aria-pressed', 'true');
+            musicToggle.setAttribute('aria-label', 'Pause music');
         }
     }
 
@@ -1059,7 +1020,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 8. Canvas Falling Petals (Marigold & Rose)
     // ==========================================
     const canvas = document.getElementById('petalCanvas');
-    if (canvas) {
+    if (canvas && !prefersReducedMotion) {
         const ctx = canvas.getContext('2d');
         
         let width = canvas.width = window.innerWidth;
@@ -1140,15 +1101,141 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     // 9. Tap to Flip Ceremony Cards (Mobile Support)
     // ==========================================
+    // Each card carries its own calendar details in data-cal-* attributes.
+    function toGoogleDate(local) {
+        // local is "YYYY-MM-DDTHH:MM" in India time (UTC+05:30) -> UTC basic format
+        const d = new Date(local + ':00+05:30');
+        return d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+    }
+
     const eventCards = document.querySelectorAll('.event-card');
     eventCards.forEach(card => {
+        const actions = card.querySelector('.event-actions');
+        if (actions && card.dataset.calStart) {
+            const cal = new URL('https://calendar.google.com/calendar/render');
+            cal.searchParams.set('action', 'TEMPLATE');
+            cal.searchParams.set('text', card.dataset.calTitle);
+            cal.searchParams.set('dates', toGoogleDate(card.dataset.calStart) + '/' + toGoogleDate(card.dataset.calEnd));
+            cal.searchParams.set('location', card.dataset.calLocation);
+            const couple = document.body.dataset.couple || '';
+            cal.searchParams.set('details', 'You are warmly invited to the wedding festivities of ' + couple + '. ' + window.location.href.split('#')[0]);
+            cal.searchParams.set('ctz', 'Asia/Kolkata');
+            const map = 'https://maps.google.com/?q=' + encodeURIComponent(card.dataset.map || card.dataset.calLocation);
+            actions.innerHTML =
+                '<a class="event-action solid" target="_blank" rel="noopener noreferrer" href="' + cal.toString() + '">' +
+                    '<svg width="13" height="13" aria-hidden="true"><use href="#i-cal"/></svg>' +
+                    '<span>Save date</span></a>' +
+                '<a class="event-action" target="_blank" rel="noopener noreferrer" href="' + map + '">' +
+                    '<svg width="13" height="13" aria-hidden="true"><use href="#i-pin"/></svg>' +
+                    '<span>Map</span></a>';
+        }
+
         card.addEventListener('click', function(e) {
-            // If the user clicked the map button, don't flip the card
-            if (e.target.closest('.event-map-btn')) {
+            // Links on the back of the card should work without flipping it
+            if (e.target.closest('.event-action, .event-map-btn')) {
                 return;
             }
             this.classList.toggle('flipped');
         });
+        card.addEventListener('keydown', function(e) {
+            if ((e.key === 'Enter' || e.key === ' ') && e.target === this) {
+                e.preventDefault();
+                this.classList.toggle('flipped');
+            }
+        });
     });
+
+    // ==========================================
+    // 9b. Venue switcher (Indore / Khargone)
+    // ==========================================
+    const venueMap = document.getElementById('venueMap');
+    const venueDirections = document.getElementById('venueDirections');
+    document.querySelectorAll('.venue-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            const q = tab.dataset.query;
+            if (!q) return;
+            const v = { embed: encodeURIComponent(tab.dataset.embed || q), link: encodeURIComponent(q).replace(/%20/g, '+') };
+            document.querySelectorAll('.venue-tab').forEach(t => {
+                t.classList.toggle('active', t === tab);
+                t.setAttribute('aria-selected', t === tab ? 'true' : 'false');
+            });
+            if (venueMap) venueMap.src = 'https://maps.google.com/maps?q=' + v.embed + '&t=&z=16&ie=UTF8&iwloc=&output=embed';
+            const card = document.getElementById('venueMapCard');
+            if (card) {
+                card.href = 'https://maps.google.com/?q=' + v.link;
+                card.querySelectorAll('[data-venue-show]').forEach(el => { el.hidden = el.dataset.venueShow !== tab.dataset.venue; });
+            }
+            if (venueDirections) venueDirections.href = 'https://maps.google.com/?q=' + v.link;
+        });
+    });
+
+    
+    // ==========================================
+    // 11. Motion: intro, polaroid developing, staggered cards, hero fade
+    // ==========================================
+
+    // Split the hero names into letters so they can rise in one by one
+    document.querySelectorAll('[data-split]').forEach(el => {
+        const text = el.textContent.trim();
+        el.setAttribute('aria-label', text);
+        el.textContent = '';
+        [...text].forEach((ch, i) => {
+            const span = document.createElement('span');
+            span.className = 'ch' + (ch === '&' ? ' amp' : '') + (ch === ' ' ? ' sp' : '');
+            span.setAttribute('aria-hidden', 'true');
+            span.style.setProperty('--ci', i);
+            span.textContent = ch === ' ' ? ' ' : ch;
+            el.appendChild(span);
+        });
+    });
+
+    let introPlayed = false;
+    function playIntro() {
+        if (introPlayed) return;
+        introPlayed = true;
+        document.body.classList.add('intro-play');
+    }
+    // No envelope on the page (or it failed): play straight away
+    if (!envelopeOverlay || getComputedStyle(envelopeOverlay).display === 'none') playIntro();
+
+    // Polaroids develop like instant film as they come into view
+    const developObserver = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('developed');
+                obs.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.45 });
+    document.querySelectorAll('.polaroid-card').forEach(card => developObserver.observe(card));
+
+    // Stagger event cards that share a row, so each row deals out left to right
+    function indexCardRows() {
+        let rowTop = null, i = 0;
+        document.querySelectorAll('.events-grid-container .event-card').forEach(card => {
+            const top = card.offsetTop;
+            if (rowTop === null || Math.abs(top - rowTop) > 10) { rowTop = top; i = 0; }
+            card.style.setProperty('--i', i++);
+        });
+    }
+    indexCardRows();
+    window.addEventListener('resize', indexCardRows);
+
+    // Hero content drifts up and fades as you scroll past it
+    const heroContent = document.querySelector('.hero-content');
+    if (heroContent && !prefersReducedMotion) {
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(() => {
+                const h = window.innerHeight;
+                const p = Math.min(Math.max(window.scrollY / h, 0), 1);
+                heroContent.style.transform = p ? `translateY(${p * -60}px)` : '';
+                heroContent.style.opacity = p ? String(1 - p * 0.9) : '';
+                ticking = false;
+            });
+        }, { passive: true });
+    }
     
 });
