@@ -835,10 +835,6 @@ a {
     transform: translateY(-1px);
 }
 
-
-
-
-
 /* Logo Styling */
 .hero-logo-img {
     width: 140px;
@@ -974,241 +970,6 @@ a {
     font-size: 0.75rem;
     color: rgba(255, 255, 255, 0.4);
     letter-spacing: 0.05em;
-}
-
-/* Invitation Envelope Cover Overlay Styles */
-.envelope-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 1000;
-    background-color: #FAF4ED; /* Elegant Light Cream Paper Background */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    perspective: 1000px;
-    transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.8s;
-}
-
-.envelope-overlay.fade-out {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-}
-
-.envelope-wrapper {
-    position: relative;
-    width: 300px;
-    height: 200px;
-    cursor: pointer;
-    transform-style: preserve-3d;
-    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.5s ease;
-}
-
-.envelope-wrapper:hover {
-    transform: scale(1.04);
-}
-
-.envelope-wrapper.open:hover {
-    transform: none;
-}
-
-.envelope-back {
-    position: absolute;
-    inset: 0;
-    background-color: #88222B; /* Darker Crimson */
-    border-radius: 6px;
-    z-index: 1;
-}
-
-.envelope-letter {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    width: 280px;
-    height: 180px;
-    transform: translate(-50%, -50%) translateY(5px);
-    background-image: url('images/hero_indian.webp');
-    background-size: cover;
-    background-position: center;
-    border-radius: 4px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.12);
-    z-index: 2;
-    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.5s, 
-                width 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
-                height 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
-                border-radius 0.3s ease, 
-                box-shadow 0.3s ease;
-}
-
-.letter-inner {
-    padding: 15px;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(255, 253, 249, 0.88);
-    border: 1px solid rgba(197, 168, 128, 0.3);
-    border-radius: 3px;
-    margin: 4px;
-    transition: background-color 0.4s ease, border-color 0.4s ease;
-}
-
-.letter-inner > * {
-    transition: opacity 0.3s ease;
-}
-
-.letter-logo {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    border: 1px solid var(--accent-gold);
-    margin-bottom: 8px;
-    object-fit: cover;
-}
-
-.letter-invite-text {
-    font-size: 0.65rem;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--text-light);
-    margin-bottom: 4px;
-}
-
-.letter-names {
-    font-family: var(--font-heading);
-    font-size: 1.4rem;
-    font-style: italic;
-    color: var(--primary-color);
-    margin-bottom: 6px;
-}
-
-.letter-date {
-    font-size: 0.7rem;
-    letter-spacing: 0.08em;
-    color: var(--accent-gold);
-    font-weight: 500;
-}
-
-.envelope-wrapper.open .envelope-letter {
-    transform: translate(-50%, -50%) translateY(-90px);
-}
-
-/* Page Expansion States */
-.envelope-overlay.expand-active .envelope-letter {
-    width: 100vw;
-    height: 100vh;
-    transform: translate(-50%, -50%) translateY(0) !important;
-    border-radius: 0;
-    box-shadow: none;
-    z-index: 1009;
-    /* Remove transform and dimensional transition delays during expansion */
-    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
-                width 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
-                height 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
-                border-radius 0.3s ease, 
-                box-shadow 0.3s ease;
-}
-
-.envelope-overlay.expand-active .letter-inner {
-    background-color: rgba(255, 253, 249, 0);
-    border-color: transparent;
-}
-
-.envelope-overlay.expand-active .letter-inner > * {
-    opacity: 0;
-}
-
-.envelope-overlay.expand-active .envelope-wrapper {
-    opacity: 0;
-    pointer-events: none;
-}
-
-.envelope-overlay.expand-active .envelope-text-container {
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-}
-
-.envelope-front {
-    position: absolute;
-    inset: 0;
-    z-index: 3;
-    transition: opacity 0.3s ease;
-}
-
-.envelope-svg {
-    display: block;
-    border-radius: 6px;
-    overflow: hidden;
-}
-
-.envelope-flap {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 110px;
-    z-index: 4;
-    transform-origin: top center;
-    transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1), z-index 0s 0.5s, opacity 0.5s ease;
-}
-
-.flap-svg {
-    display: block;
-}
-
-.envelope-wrapper.open .envelope-flap {
-    transform: rotateX(180deg);
-    z-index: 1;
-}
-
-.envelope-seal {
-    position: absolute;
-    top: 100px;
-    left: 150px;
-    transform: translate(-50%, -50%);
-    z-index: 5;
-    transition: transform 0.4s ease, opacity 0.4s ease;
-}
-
-.seal-img {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    border: 1px solid var(--accent-gold-bright);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-    object-fit: cover;
-    background-color: #fffdf9;
-}
-
-.envelope-wrapper.open .envelope-seal {
-    transform: translate(-50%, -50%) scale(1.4);
-    opacity: 0;
-    pointer-events: none;
-}
-
-.envelope-text-container {
-    margin-top: 50px;
-    text-align: center;
-    color: var(--primary-color);
-}
-
-.envelope-main-title {
-    font-family: var(--font-heading);
-    font-size: 2.4rem;
-    font-style: italic;
-    color: var(--primary-color);
-    margin-bottom: 8px;
-    text-shadow: 0 1px 2px rgba(255,255,255,0.3);
-}
-
-.envelope-hint {
-    font-family: var(--font-body);
-    font-size: 0.85rem;
-    letter-spacing: 0.05em;
-    color: rgba(155, 44, 57, 0.75);
 }
 
 /* Triple Interactive Scratch Cards Styles */
@@ -1642,50 +1403,9 @@ a {
     }
 }
 
-/* Custom transitions when the envelope is closing in the loop (reverses opening delays) */
-.envelope-overlay.closing-loop .envelope-letter {
-    /* Instantly start sliding down and shrinking, no delays! */
-    transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) 0s, 
-                width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) 0s, 
-                height 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) 0s, 
-                border-radius 0.3s ease 0s, 
-                box-shadow 0.3s ease 0s !important;
-}
-
-.envelope-overlay.closing-loop .envelope-flap {
-    /* Wait 0.5s (until the letter is inside) before starting to rotate closed */
-    transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) 0.5s !important;
-}
-
 /* Language Selection Modal (Glassmorphic) */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* Floating Language Toggle Button */
-
-
-
 
 /* Responsive adjustments for floaters */
 @media (max-width: 480px) {
@@ -1869,20 +1589,6 @@ a {
         border-width: 2px;
     }
 }
-
-/* =========================================================
-   Avishi weds Rahul · additions (v3)
-   ========================================================= */
-
-/* Envelope cover: names above the title */
-.envelope-kicker {
-    font-family: 'Pinyon Script', cursive;
-    font-size: 2rem;
-    color: var(--accent-gold-dark);
-    margin-bottom: -6px;
-    letter-spacing: 0;
-}
-.envelope-kicker span { color: var(--primary-color); }
 
 /* Hero subtitle (Shubh Vivah) */
 .hero-subtitle {
@@ -2097,7 +1803,6 @@ a {
     .couple-name { font-size: 2.8rem; }
     .ss-date { font-size: 0.92rem; }
     .ss-name { font-size: 0.58rem; letter-spacing: 0.06em; }
-    .envelope-kicker { font-size: 1.7rem; }
 }
 
 /* Respect people who turn off animations */
@@ -2106,7 +1811,6 @@ a {
     #petalCanvas { display: none; }
     .event-card-inner { animation: none !important; }
 }
-
 
 /* Venue switcher: Indore + Khargone */
 .venue-switch { display: flex; gap: 12px; justify-content: center; margin-top: 18px; flex-wrap: wrap; }
@@ -2141,24 +1845,6 @@ a {
 .map-card .mc-name { font-family: var(--font-heading); font-style: italic; font-size: 1.6rem; }
 .map-card .mc-addr { font-size: 0.85rem; color: var(--text-light); }
 .map-card .mc-cta { margin-top: 6px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; border-bottom: 1px solid currentColor; padding-bottom: 2px; }
-
-/* =========================================================
-   Motion (shared by both invitation sites)
-   ========================================================= */
-
-/* --- Envelope: the seal breathes and sends out a gold ripple, inviting a tap --- */
-.envelope-wrapper:not(.open) .seal-img { animation: sealBreath 2.6s ease-in-out infinite; }
-.envelope-wrapper:not(.open) .envelope-seal::before {
-    content: "";
-    position: absolute;
-    inset: -2px;
-    border-radius: 50%;
-    border: 1.5px solid var(--accent-gold-bright);
-    animation: sealRipple 2.6s ease-out infinite;
-    pointer-events: none;
-}
-@keyframes sealBreath { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.07); } }
-@keyframes sealRipple { 0% { transform: scale(1); opacity: 0.9; } 100% { transform: scale(1.9); opacity: 0; } }
 
 /* --- Hero: slow drift on the palace backdrop --- */
 .hero-bg { animation: kenBurns 26s ease-in-out infinite alternate; transition: none; }
@@ -2341,4 +2027,309 @@ body.intro-play .scratch-card-col:nth-child(3) { animation-delay: 1840ms; }
     .polaroid-image-wrapper img { filter: none !important; }
     .polaroid-image-wrapper::after { opacity: 0 !important; }
     .hero-bg, .cta-button::after { animation: none !important; }
+}
+
+/* =========================================================
+   Opening envelope (shared by both invitation sites)
+   ========================================================= */
+.envelope-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    padding: 24px 16px;
+    overflow: hidden;
+    background: radial-gradient(120% 90% at 50% 42%, #8A2232 0%, #5A1220 46%, #2A070F 100%);
+    transition: opacity 0.8s ease, visibility 0s linear 0.8s;
+}
+/* slow-turning gold rays, like a mandala behind the envelope */
+.envelope-overlay::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 170vmax;
+    height: 170vmax;
+    margin: -85vmax 0 0 -85vmax;
+    background: repeating-conic-gradient(rgba(231, 200, 115, 0.10) 0deg 0.7deg, transparent 0.7deg 7.5deg);
+    -webkit-mask-image: radial-gradient(circle, #000 0%, rgba(0, 0, 0, 0.55) 20%, transparent 52%);
+            mask-image: radial-gradient(circle, #000 0%, rgba(0, 0, 0, 0.55) 20%, transparent 52%);
+    animation: mandalaTurn 160s linear infinite;
+    pointer-events: none;
+}
+/* fine concentric gold rings */
+.envelope-overlay::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-radial-gradient(circle at 50% 50%, transparent 0 56px, rgba(231, 200, 115, 0.07) 56px 57px);
+    -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 0%, transparent 70%);
+            mask-image: radial-gradient(circle at 50% 50%, #000 0%, transparent 70%);
+    pointer-events: none;
+}
+@keyframes mandalaTurn { to { transform: rotate(360deg); } }
+
+/* rising gold dust */
+.env-dust, .env-dust::after {
+    position: absolute;
+    left: 0; right: 0; top: 0;
+    bottom: -300px;
+    pointer-events: none;
+    background-image:
+        radial-gradient(1.6px 1.6px at 22px 34px, rgba(255, 222, 150, 0.9), transparent),
+        radial-gradient(1.2px 1.2px at 140px 92px, rgba(255, 222, 150, 0.7), transparent),
+        radial-gradient(2px 2px at 226px 164px, rgba(255, 232, 175, 0.85), transparent),
+        radial-gradient(1px 1px at 82px 206px, rgba(255, 222, 150, 0.6), transparent),
+        radial-gradient(1.4px 1.4px at 262px 254px, rgba(255, 222, 150, 0.7), transparent);
+    background-size: 300px 300px;
+    animation: dustRise 38s linear infinite;
+    opacity: 0.75;
+}
+.env-dust::after {
+    content: "";
+    bottom: -470px;
+    background-size: 470px 470px;
+    animation-duration: 60s;
+    opacity: 0.5;
+}
+@keyframes dustRise { to { transform: translateY(-300px); } }
+.env-dust::after { animation-name: dustRise2; }
+@keyframes dustRise2 { to { transform: translateY(-470px); } }
+
+/* caption above, hint below */
+.envelope-caption, .env-hint { position: relative; z-index: 2; text-align: center; transition: opacity 0.45s ease, transform 0.45s ease; }
+.env-eyebrow {
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    color: #E7C873;
+    margin-bottom: 4px;
+    animation: capIn 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s both;
+}
+.env-title {
+    font-family: 'Pinyon Script', cursive;
+    font-size: clamp(2.6rem, 11vw, 3.8rem);
+    line-height: 1.15;
+    color: #FFF6E6;
+    text-shadow: 0 2px 24px rgba(0, 0, 0, 0.35);
+    animation: capIn 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.4s both;
+}
+.env-title span { color: #E7C873; }
+.env-hint {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-body);
+    font-size: 0.74rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255, 246, 230, 0.78);
+    animation: capIn 1s ease 1.3s both;
+}
+.env-hint-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #E7C873;
+    box-shadow: 0 0 0 0 rgba(231, 200, 115, 0.6);
+    animation: hintPulse 1.8s ease-out infinite;
+}
+@keyframes capIn { from { opacity: 0; transform: translateY(14px); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes hintPulse { 0% { box-shadow: 0 0 0 0 rgba(231, 200, 115, 0.6); } 100% { box-shadow: 0 0 0 12px rgba(231, 200, 115, 0); } }
+
+/* the envelope */
+.env-stage { position: relative; z-index: 3; }
+.env {
+    position: relative;
+    width: min(86vw, 380px);
+    aspect-ratio: 3 / 2;
+    perspective: 1400px;
+    cursor: pointer;
+    animation: envIn 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s both, envFloat 5s ease-in-out 1.3s infinite;
+}
+.env:focus-visible { outline: 2px solid #E7C873; outline-offset: 10px; border-radius: 12px; }
+@keyframes envIn { from { opacity: 0; transform: translateY(-50px) rotate(-5deg) scale(0.92); } to { opacity: 1; transform: none; } }
+@keyframes envFloat { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-9px) rotate(0.5deg); } }
+.env-shadow {
+    position: absolute;
+    left: 12%; right: 12%;
+    bottom: -26px;
+    height: 26px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.55), transparent 70%);
+    filter: blur(5px);
+    animation: shadowFloat 5s ease-in-out 1.3s infinite;
+    transition: opacity 0.6s ease;
+}
+@keyframes shadowFloat { 0%, 100% { transform: scaleX(1); opacity: 1; } 50% { transform: scaleX(0.88); opacity: 0.7; } }
+
+.env-back {
+    position: absolute;
+    inset: 0;
+    border-radius: 10px;
+    background:
+        radial-gradient(circle, rgba(231, 200, 115, 0.4) 1px, transparent 1.4px) 0 0 / 12px 12px,
+        linear-gradient(180deg, #A42E3E 0%, #7C1B28 100%);
+    box-shadow: inset 0 0 0 1px rgba(231, 200, 115, 0.35);
+    z-index: 1;
+    transition: transform 0.7s cubic-bezier(0.5, 0, 0.75, 0), opacity 0.6s ease;
+}
+.env-pocket {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    border-radius: 10px;
+    overflow: hidden;
+    filter: drop-shadow(0 -2px 3px rgba(90, 40, 20, 0.12));
+    transition: transform 0.7s cubic-bezier(0.5, 0, 0.75, 0), opacity 0.6s ease;
+}
+.env-flap {
+    position: absolute;
+    left: 0; top: 0;
+    width: 100%;
+    height: 62.5%;
+    z-index: 4;
+    transform-origin: 50% 0;
+    transform-style: preserve-3d;
+    transition: transform 0.75s cubic-bezier(0.45, 0, 0.2, 1), z-index 0s linear 0.38s, opacity 0.6s ease;
+    filter: drop-shadow(0 3px 4px rgba(90, 40, 20, 0.18));
+}
+.env-flap-face {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+}
+.env-flap-back { transform: rotateX(180deg); }
+
+/* the invitation card inside */
+.env-letter {
+    position: absolute;
+    left: 5%; right: 5%;
+    top: 5%;
+    height: 90%;
+    z-index: 2;
+    padding: 6px;
+    border-radius: 6px;
+    background: #FFFBF3;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+    transition: transform 0.85s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.7s ease, filter 0.7s ease;
+}
+.env-card {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    text-align: center;
+    border-radius: 4px;
+    border: 1px solid rgba(201, 162, 75, 0.75);
+    outline: 1px solid rgba(201, 162, 75, 0.35);
+    outline-offset: -6px;
+    background: radial-gradient(circle at 50% 0%, #FFFFFF 0%, #FBF1E0 100%);
+}
+.env-card-logo { width: 46px; height: 46px; border-radius: 50%; border: 1px solid #C9A24B; object-fit: cover; margin-bottom: 4px; }
+.env-card-kicker { font-family: var(--font-body); font-size: 0.55rem; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; color: #8F7249; }
+.env-card-names { font-family: 'Pinyon Script', cursive; font-size: 1.95rem; line-height: 1.2; color: var(--primary-color); }
+.env-card-names em { font-style: normal; color: #C9A24B; }
+.env-card-rule { width: 64px; height: 1px; margin: 2px 0 3px; background: linear-gradient(90deg, transparent, #C9A24B, transparent); }
+.env-card-date { font-family: var(--font-heading); font-style: italic; font-size: 0.9rem; letter-spacing: 0.12em; color: #2b1b1d; }
+.env-card-place { font-family: var(--font-body); font-size: 0.55rem; letter-spacing: 0.22em; text-transform: uppercase; color: #8F7249; }
+.env-card::after {
+    content: "";
+    position: absolute;
+    top: 0; bottom: 0;
+    left: -60%;
+    width: 45%;
+    background: linear-gradient(100deg, transparent, rgba(255, 234, 185, 0.85), transparent);
+    transform: skewX(-18deg);
+    pointer-events: none;
+}
+
+/* wax seal */
+.env-seal {
+    position: absolute;
+    left: 50%;
+    top: 62.5%;
+    width: 84px;
+    height: 84px;
+    margin: -42px 0 0 -42px;
+    z-index: 5;
+    display: grid;
+    place-items: center;
+    filter: drop-shadow(0 5px 8px rgba(0, 0, 0, 0.35));
+}
+.env-seal-wax { position: absolute; inset: 0; width: 100%; height: 100%; }
+.env-seal-logo {
+    position: relative;
+    width: 50px; height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1.5px solid #E7C873;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+.env-seal::before {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    border: 1.5px solid #E7C873;
+    animation: sealRing 2.4s ease-out 1.6s infinite;
+    pointer-events: none;
+}
+@keyframes sealRing { 0% { transform: scale(1); opacity: 0.9; } 100% { transform: scale(1.8); opacity: 0; } }
+.env:hover .env-seal { transform: scale(1.06); transition: transform 0.3s ease; }
+
+/* ---- opening sequence (classes added by app.js) ---- */
+.envelope-overlay.is-opening .envelope-caption { opacity: 0; transform: translateY(-16px); }
+.envelope-overlay.is-opening .env-hint { animation: none; opacity: 0; transform: translateY(12px); }
+.envelope-overlay.is-opening .env,
+.envelope-overlay.is-opening .env-shadow { animation-play-state: paused; }
+.envelope-overlay.is-opening .env-seal { animation: sealBreak 0.5s cubic-bezier(0.5, 0, 0.75, 0) forwards; }
+.envelope-overlay.is-opening .env-seal::before { animation: none; opacity: 0; }
+@keyframes sealBreak {
+    0%   { transform: scale(1); opacity: 1; }
+    35%  { transform: scale(1.16); opacity: 1; }
+    100% { transform: translateY(46px) rotate(28deg) scale(0.7); opacity: 0; }
+}
+
+.envelope-overlay.flap-open .env-flap { transform: rotateX(180deg); z-index: 1; }
+
+.envelope-overlay.letter-out .env-letter { transform: translateY(-64%); }
+
+.envelope-overlay.letter-front .env-letter {
+    z-index: 6;
+    transform: translateY(-6%) scale(1.2);
+    box-shadow: 0 24px 50px rgba(0, 0, 0, 0.4);
+}
+.envelope-overlay.letter-front .env-card::after { animation: cardSheen 1.1s ease 0.55s both; }
+@keyframes cardSheen { from { left: -60%; } to { left: 130%; } }
+.envelope-overlay.letter-front .env-back,
+.envelope-overlay.letter-front .env-pocket { transform: translateY(80%); opacity: 0; }
+.envelope-overlay.letter-front .env-flap { transform: translateY(80%) rotateX(180deg); opacity: 0; transition: transform 0.7s cubic-bezier(0.5, 0, 0.75, 0), opacity 0.6s ease; }
+.envelope-overlay.letter-front .env-shadow { opacity: 0; }
+
+.envelope-overlay.is-exiting { opacity: 0; visibility: hidden; pointer-events: none; }
+.envelope-overlay.is-exiting .env-letter {
+    transform: translateY(-6%) scale(1.55);
+    opacity: 0;
+    filter: blur(4px);
+    transition: transform 0.8s cubic-bezier(0.5, 0, 0.2, 1), opacity 0.7s ease, filter 0.7s ease;
+}
+
+@media (max-width: 380px) {
+    .env-card-names { font-size: 1.7rem; }
+    .env-card-logo { width: 40px; height: 40px; }
 }

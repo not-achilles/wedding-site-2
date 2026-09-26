@@ -36,40 +36,57 @@ document.addEventListener('DOMContentLoaded', () => {
         envelopeWrapper.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); envelopeWrapper.click(); }
         });
+
+        // Timings for each step of the opening (ms from the tap)
+        const ENV_T = prefersReducedMotion
+            ? { flap: 0, out: 0, front: 0, exit: 250 }
+            : { flap: 320, out: 950, front: 1750, exit: 3200 };
+        let envExitTimer = null;
+
         envelopeWrapper.addEventListener('click', () => {
-            if (envelopeWrapper.classList.contains('open')) return;
-            
-            // 1. Open the 3D flap and slide card out of envelope
-            envelopeWrapper.classList.add('open');
-            
-            // 2. Play ambient music automatically on user gesture
+            if (envelopeOverlay.classList.contains('is-opening')) return;
+
+            // 1. Seal breaks, caption steps aside
+            envelopeOverlay.classList.add('is-opening');
+
+            // 2. Play music on this first tap (browsers need a gesture)
             if (typeof toggleMusic === 'function' && !isPlaying) {
                 toggleMusic();
             }
-            
-            // 3. Once the card has slid out, open the invitation
-            setTimeout(() => {
+
+            // 3. Flap opens, card slides out, card comes forward while the envelope falls away
+            setTimeout(() => envelopeOverlay.classList.add('flap-open'), ENV_T.flap);
+            setTimeout(() => envelopeOverlay.classList.add('letter-out'), ENV_T.out);
+            setTimeout(() => envelopeOverlay.classList.add('letter-front'), ENV_T.front);
+
+            // 4. After a moment to read the card, step into the invitation
+            envExitTimer = setTimeout(proceedToMainSite, ENV_T.exit);
+        });
+
+        // Once the card is showing, a tap anywhere goes straight in
+        envelopeOverlay.addEventListener('click', () => {
+            if (envelopeOverlay.classList.contains('letter-front')) {
+                clearTimeout(envExitTimer);
                 proceedToMainSite();
-            }, 1100);
+            }
         });
     }
 
+    let hasEntered = false;
     function proceedToMainSite() {
+        if (hasEntered) return;
+        hasEntered = true;
         if (!scratchCardsRevealed) initScratchCard();
-        
-        // Zoom/Expand the card to fill the viewport
-        envelopeOverlay.classList.add('expand-active');
-        
-        // Remove overlay to reveal the main site (after zoom completes)
-        setTimeout(() => {
-            envelopeOverlay.style.display = 'none';
-            document.body.style.overflow = ''; // Unlock scrolling
-            playIntro();
-            isMainContentVisible = true;
-        }, 600); // 600ms matching transition speed
+
+        envelopeOverlay.classList.add('is-exiting');
+        document.body.style.overflow = ''; // Unlock scrolling
+        isMainContentVisible = true;
+
+        // Start the hero intro while the card dissolves, then remove the overlay
+        setTimeout(playIntro, 350);
+        setTimeout(() => { envelopeOverlay.style.display = 'none'; }, 850);
     }
 
-    
     // (Scroll to Bottom Close Envelope Loop removed as requested)
     
     // ==========================================
