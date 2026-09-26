@@ -140,20 +140,18 @@
 
             <!-- Scratch to reveal the date -->
             <div class="scratch-cards-wrapper intro-item" style="--d:1500ms" id="scratchCardContainer">
-                <span class="scratch-hint">Scratch to reveal the date</span>
-                <div class="scratch-cards-row">
-                    <div class="scratch-card-col">
-                        <div class="scratch-card-reveal">Nov</div>
-                        <canvas id="scratchCanvasMonth" class="scratch-canvas" width="95" height="110" aria-hidden="true"></canvas>
+                <div class="foil-card" id="scratchCard">
+                    <div class="foil-reveal">
+                        <span class="fr-kicker">Save the Date</span>
+                        <div class="fr-row">
+                            <span class="fr-side">Tuesday</span>
+                            <span class="fr-day">24</span>
+                            <span class="fr-side">November<br>2026</span>
+                        </div>
                     </div>
-                    <div class="scratch-card-col">
-                        <div class="scratch-card-reveal">24</div>
-                        <canvas id="scratchCanvasDay" class="scratch-canvas" width="95" height="110" aria-hidden="true"></canvas>
-                    </div>
-                    <div class="scratch-card-col">
-                        <div class="scratch-card-reveal">2026</div>
-                        <canvas id="scratchCanvasYear" class="scratch-canvas" width="95" height="110" aria-hidden="true"></canvas>
-                    </div>
+                    <canvas id="scratchCanvas" class="foil-canvas" aria-hidden="true"></canvas>
+                    <div class="foil-shine" aria-hidden="true"></div>
+                    <svg class="foil-hand" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9 11.24V7.5a2.5 2.5 0 0 1 5 0v3.74c1.21-.81 2-2.18 2-3.74C16 5.01 13.99 3 11.5 3S7 5.01 7 7.5c0 1.56.79 2.93 2 3.74zm9.84 4.63-4.54-2.26c-.17-.07-.35-.11-.54-.11H13v-6c0-.83-.67-1.5-1.5-1.5S10 6.67 10 7.5v10.74l-3.43-.72c-.08-.01-.15-.03-.24-.03-.31 0-.59.13-.79.33l-.79.8 4.94 4.94c.27.27.65.44 1.06.44h6.79c.75 0 1.33-.55 1.44-1.28l.75-5.27c.01-.07.02-.14.02-.2 0-.62-.38-1.16-.91-1.38z"/></svg>
                 </div>
                 <button type="button" class="scratch-skip" id="scratchSkip">or tap here to reveal</button>
             </div>
