@@ -2386,3 +2386,19 @@ body.intro-play .foil-card.revealed,
     .fr-day { font-size: 2.8rem; }
     .fr-side { min-width: 66px; font-size: 0.55rem; }
 }
+
+/* Hosts welcoming guests (Families card) */
+.hosts-rule { margin: 30px auto 24px; }
+.welcome-hosts { position: relative; z-index: 2; }
+.welcome-hosts .side-label { color: var(--accent-gold-dark); font-weight: 600; letter-spacing: 0.2em; margin-bottom: 2px; }
+.hosts-names {
+    font-family: 'Pinyon Script', cursive;
+    font-size: 2.3rem;
+    line-height: 1.25;
+    color: var(--primary-color);
+    margin: 2px 0 4px;
+}
+.hosts-names .hn { display: block; }
+.families-card.fade-up .welcome-hosts { opacity: 0; transform: translateY(14px); transition: opacity 0.9s ease 0.95s, transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) 0.95s; }
+.families-card.visible .welcome-hosts { opacity: 1; transform: none; }
+@media (max-width: 768px) { .hosts-names { font-size: 2rem; } }
