@@ -1206,7 +1206,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 obs.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.45 });
+    }, { threshold: 0.2 });
     document.querySelectorAll('.polaroid-card').forEach(card => developObserver.observe(card));
 
     // Stagger event cards that share a row, so each row deals out left to right
