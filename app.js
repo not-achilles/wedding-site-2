@@ -654,9 +654,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         
-        // Fullscreen: enlarge the whole popup (video + our controls), not the bare
-        // video, so the picture keeps its shape and close/pause stay on screen.
-        // Phones that can't fullscreen a box (iPhone) get a full-window view instead.
+        // Full screen: the popup grows to fill the window with the video letterboxed,
+        // and close / pause / sound / shrink stay on top the whole time.
         const FS_ICON = {
             enter: '<path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" fill="currentColor"/>',
             exit: '<path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" fill="currentColor"/>'
@@ -684,24 +683,31 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (p && typeof p.catch === 'function') p.catch(() => {});
                 }
             }
-            videoPopup.classList.remove('is-expanded');
+            if (videoPopup.classList.contains('is-expanded')) {
+                videoPopup.classList.remove('is-expanded');
+                if (history.state && history.state.videoExpanded) {
+                    try { history.back(); } catch (err) { /* ignore */ }
+                }
+            }
             syncFullscreenUI();
         }
         function expandInWindow() {
             videoPopup.classList.add('is-expanded');
             syncFullscreenUI();
+            try { history.pushState({ videoExpanded: true }, ''); } catch (err) { /* ignore */ }
         }
+        window.addEventListener('popstate', () => {
+            if (videoPopup.classList.contains('is-expanded')) {
+                videoPopup.classList.remove('is-expanded');
+                syncFullscreenUI();
+            }
+        });
 
+        // Expand within the page instead of using the browser's full-screen mode:
+        // browsers hand a full-screen video to their own player, which covers our buttons.
         bindMediaControl(fullscreenBtn, () => {
             if (isBig()) { exitVideoFullscreen(); return; }
-            const req = videoPopup.requestFullscreen || videoPopup.webkitRequestFullscreen;
-            if (!req) { expandInWindow(); return; }
-            try {
-                const p = req.call(videoPopup);
-                if (p && typeof p.catch === 'function') p.catch(expandInWindow);
-            } catch (err) {
-                expandInWindow();
-            }
+            expandInWindow();
         });
 
         document.addEventListener('keydown', (e) => {

@@ -2454,7 +2454,19 @@ body.intro-play .foil-card.revealed,
     background: #000;
 }
 .video-popup.is-fullscreen video,
-.video-popup:fullscreen video { object-fit: contain; }
+.video-popup:fullscreen video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 100%;
+    width: auto;
+    max-width: 100%;
+    aspect-ratio: 9 / 16;
+    transform: translate(-50%, -50%);
+    object-fit: contain;
+}
+.video-popup.is-fullscreen .video-popup-close,
+.video-popup.is-fullscreen .video-popup-controls { z-index: 5; }
 .video-popup.is-fullscreen .video-popup-close {
     top: calc(16px + env(safe-area-inset-top, 0px));
     right: 16px;
