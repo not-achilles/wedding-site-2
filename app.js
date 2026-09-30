@@ -654,21 +654,63 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         
-        // Fullscreen button functionality
-        bindMediaControl(fullscreenBtn, () => {
-            if (popupVideo.requestFullscreen) {
-                popupVideo.requestFullscreen();
-            } else if (popupVideo.webkitRequestFullscreen) { /* Safari / iOS */
-                popupVideo.webkitRequestFullscreen();
-            } else if (popupVideo.webkitEnterFullscreen) { /* Specific to iOS Safari video elements */
-                popupVideo.webkitEnterFullscreen();
-            } else if (popupVideo.msRequestFullscreen) { /* IE11 */
-                popupVideo.msRequestFullscreen();
+        // Fullscreen: enlarge the whole popup (video + our controls), not the bare
+        // video, so the picture keeps its shape and close/pause stay on screen.
+        // Phones that can't fullscreen a box (iPhone) get a full-window view instead.
+        const FS_ICON = {
+            enter: '<path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" fill="currentColor"/>',
+            exit: '<path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" fill="currentColor"/>'
+        };
+        const fsElement = () => document.fullscreenElement || document.webkitFullscreenElement || null;
+        const isBig = () => fsElement() === videoPopup || videoPopup.classList.contains('is-expanded');
+
+        function syncFullscreenUI() {
+            const big = isBig();
+            videoPopup.classList.toggle('is-fullscreen', big);
+            document.body.style.overflow = big ? 'hidden' : '';
+            if (fullscreenBtn) {
+                fullscreenBtn.querySelector('svg').innerHTML = big ? FS_ICON.exit : FS_ICON.enter;
+                fullscreenBtn.setAttribute('aria-label', big ? 'Exit full screen' : 'Full screen');
             }
+        }
+        document.addEventListener('fullscreenchange', syncFullscreenUI);
+        document.addEventListener('webkitfullscreenchange', syncFullscreenUI);
+
+        function exitVideoFullscreen() {
+            if (fsElement()) {
+                const exit = document.exitFullscreen || document.webkitExitFullscreen;
+                if (exit) {
+                    const p = exit.call(document);
+                    if (p && typeof p.catch === 'function') p.catch(() => {});
+                }
+            }
+            videoPopup.classList.remove('is-expanded');
+            syncFullscreenUI();
+        }
+        function expandInWindow() {
+            videoPopup.classList.add('is-expanded');
+            syncFullscreenUI();
+        }
+
+        bindMediaControl(fullscreenBtn, () => {
+            if (isBig()) { exitVideoFullscreen(); return; }
+            const req = videoPopup.requestFullscreen || videoPopup.webkitRequestFullscreen;
+            if (!req) { expandInWindow(); return; }
+            try {
+                const p = req.call(videoPopup);
+                if (p && typeof p.catch === 'function') p.catch(expandInWindow);
+            } catch (err) {
+                expandInWindow();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && videoPopup.classList.contains('is-expanded')) exitVideoFullscreen();
         });
         
         // Close button functionality
         bindMediaControl(closeBtn, () => {
+            exitVideoFullscreen();
             popupVideo.pause();
             videoPopup.classList.remove('show');
             // Auto-resume site music when popup closed

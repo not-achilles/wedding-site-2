@@ -2426,3 +2426,45 @@ body.intro-play .foil-card.revealed,
     .footer-hosts-names { font-size: 2.1rem; }
     .footer-hosts-names .dot { display: block; height: 0; overflow: hidden; }
 }
+
+/* Invitation video in full screen: keep its shape, keep our controls */
+.video-popup.is-fullscreen,
+.video-popup:fullscreen {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    aspect-ratio: auto;
+    max-width: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    transform: none;
+    transition: none;
+    z-index: 2000;
+    background: #000;
+}
+.video-popup:-webkit-full-screen {
+    width: 100vw;
+    height: 100vh;
+    border: 0;
+    border-radius: 0;
+    transform: none;
+    background: #000;
+}
+.video-popup.is-fullscreen video,
+.video-popup:fullscreen video { object-fit: contain; }
+.video-popup.is-fullscreen .video-popup-close {
+    top: calc(16px + env(safe-area-inset-top, 0px));
+    right: 16px;
+    width: 44px;
+    height: 44px;
+}
+.video-popup.is-fullscreen .video-popup-controls {
+    bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+    left: 20px;
+    right: 20px;
+}
+.video-popup.is-fullscreen .video-control-btn { width: 44px; height: 44px; }
+.video-popup.is-fullscreen .video-control-btn svg { width: 20px; height: 20px; }
